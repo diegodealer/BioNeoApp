@@ -4,7 +4,7 @@ import Colors from '../constants/colors';
 const Welcome = () => {
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Welcome to the App!</Text>
+            <Text style={styles.text}>Bienvenido a BioNeoApp</Text>
         </View> 
     )
 }

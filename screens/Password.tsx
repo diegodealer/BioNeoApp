@@ -26,7 +26,7 @@ const Password = () => {
           <Text style={styles.label}>INGRESA TU CORREO ELECTRÓNICO</Text>
           <TextInput
             style={styles.input}
-            placeholder="Ingresa la nueva contraseña"
+            placeholder="Ingresa tu correo electrónico"
             placeholderTextColor="#BDBDBD"
             value={email}
             onChangeText={setEmail}
@@ -34,7 +34,7 @@ const Password = () => {
             autoCapitalize="none"
           />
           <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>enviar</Text>
+            <Text style={styles.buttonText}>Enviar</Text>
           </TouchableOpacity>
         </View>
       </View>

@@ -6,6 +6,7 @@ import {LinearGradient} from 'expo-linear-gradient';
 
 const Password = () => {
     const [email, setEmail] = useState('');
+    const navigation = useNavigation();
     return (
      <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style ={styles.container}>  
@@ -15,6 +16,9 @@ const Password = () => {
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
         >
+            <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+             <Text style={styles.backButtonText}>←</Text>
+           </TouchableOpacity>
            <Text style={styles.title}>¿Has olvidado tu contraseña?</Text>
           <Text style={styles.subtitle}>Nueva contraseña</Text>
         </LinearGradient>
@@ -97,6 +101,18 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         textTransform: 'lowercase',
+    },
+    backButton: {
+        position: 'absolute',
+        left: 20,
+        top: 40,
+        padding: 8,
+        zIndex: 10,
+    },
+    backButtonText: {
+        color: '#fff',
+        fontSize: 24,
+        fontWeight: 'bold',
     },
 });
 

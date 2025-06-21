@@ -1,12 +1,26 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import Password from './screens/Password';
+import RecoverPassword from './screens/RecoverPassword';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="RecoverPassword" screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="RecoverPassword" component={RecoverPassword} />
+        <Stack.Screen name="Password" component={Password} />
+        {/* Otras pantallas aquí */}
+      </Stack.Navigator>
+    </NavigationContainer>
+    
+    /*<View style={styles.container}>
       <Text>Open up App.tsx to start working on your app!</Text>
       <StatusBar style="auto" />
-    </View>
+    </View>*/
   );
 }
 
@@ -18,3 +32,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+

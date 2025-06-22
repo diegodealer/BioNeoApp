@@ -3,16 +3,17 @@ import Colors from '../constants/colors';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {LinearGradient} from 'expo-linear-gradient';
+import styles from '../constants/styles';
 
 const Password = () => {
     const [email, setEmail] = useState('');
     const navigation = useNavigation();
     return (
      <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <View style ={styles.container}>  
+        <View style ={passtyles.container}>  
             <LinearGradient
-            colors={['#2FBA87', '#00FA9F']}
-            style={styles.header}
+            colors={[Colors.mint_green, Colors.green_emerald]}
+            style={passtyles.header}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
         >
@@ -42,7 +43,7 @@ const Password = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const passtyles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
@@ -55,64 +56,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderBottomLeftRadius: 30,
         borderBottomRightRadius: 30,
-    },
-    title: {
-        color: '#fff',
-        fontSize: 22,
-        fontWeight: 'bold',
-        marginBottom: 10,
-        textAlign: 'center',
-    },
-    subtitle:{
-        color: '#fff',
-        fontSize: 16,
-        textAlign: 'center',
-    },
-    form: {
-        flex: 1,
-        marginTop: 40,
-        paddingHorizontal: 30,
-    },
-    label: {
-        color: '#BDBDBD',
-        fontSize: 12,
-        marginBottom: 10,
-        letterSpacing: 1,
-        fontWeight: 'bold',
-    },
-    input: {
-        backgroundColor: '#F2F2F2',
-        borderRadius: 20,
-        paddingHorizontal: 18,
-        paddingVertical: 12,
-        fontSize: 16,
-        marginBottom: 24,
-        color: '#333',
-    },
-    button: {
-        backgroundColor: '#3D7A64',
-        borderRadius: 20,
-        paddingVertical: 14,
-        alignItems: 'center',
-        marginTop: 8,
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 16,
-        fontWeight: 'bold',
-        textTransform: 'lowercase',
-    },
-    backButton: {
-        position: 'absolute',
-        left: 20,
-        top: 40,
-        padding: 8,
-        zIndex: 10,
-    },
-    backButtonText: {
-        color: '#fff',
-        fontSize: 24,
-        fontWeight: 'bold',
     },
 });
 

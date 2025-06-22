@@ -13,7 +13,7 @@ const RecoverPassword = () => {
      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <View style={styles.container}>
         <LinearGradient
-          colors={['#2FBA87', '#00FA9F']}
+          colors={[Colors.mint_green, Colors.green_emerald]}
           style={styles.header}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
@@ -31,7 +31,7 @@ const RecoverPassword = () => {
           <TextInput
             style={styles.input}
             placeholder="******"
-            placeholderTextColor="#BDBDBD"
+            placeholderTextColor={Colors.placeholder}
             secureTextEntry
             value={password}
             onChangeText={setPassword}
@@ -40,7 +40,7 @@ const RecoverPassword = () => {
           <TextInput
             style={styles.input}
             placeholder="******"
-            placeholderTextColor="#BDBDBD"
+            placeholderTextColor={Colors.placeholder}
             secureTextEntry
             value={confirm}
             onChangeText={setConfirm}

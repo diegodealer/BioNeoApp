@@ -62,15 +62,15 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
-        borderRadius: 30,
         overflow: 'hidden',
     },
     header: {
+        width: '100%',
+        minHeight: 180,
         paddingTop: 40,
         paddingBottom: 30,
+        justifyContent: 'center',
         alignItems: 'center',
-        borderBottomLeftRadius: 30,
-        borderBottomRightRadius: 30,
     },
 });
 

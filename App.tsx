@@ -10,17 +10,12 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="RecoverPassword" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName="Password" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="RecoverPassword" component={RecoverPassword} />
         <Stack.Screen name="Password" component={Password} />
         {/* Otras pantallas aquí */}
       </Stack.Navigator>
-    </NavigationContainer>
-    
-    /*<View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>*/
+    </NavigationContainer>  
   );
 }
 

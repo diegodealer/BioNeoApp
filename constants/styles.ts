@@ -58,7 +58,20 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
         textAlign: 'center',
-    }  
+    },
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        borderRadius: 30,
+        overflow: 'hidden',
+    },
+    header: {
+        paddingTop: 40,
+        paddingBottom: 30,
+        alignItems: 'center',
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
+    },
 });
 
 export default styles;

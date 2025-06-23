@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import Colors from '../constants/colors';
+import styles from '../constants/styles';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -10,19 +11,19 @@ const RecoverPassword = () => {
     const [confirm, setConfirm] = useState('');
 
     return (
-     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+     <KeyboardAvoidingView style={{ flex: 1 }} behavior='padding'>
       <View style={styles.container}>
         <LinearGradient
-          colors={['#2FBA87', '#00FA9F']}
+          colors={[Colors.mint_green, Colors.green_emerald]}
           style={styles.header}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
         >
-            <View style={styles.lockIcon}>
+            <View style={Recoverstyles.lockIcon}>
             {/* Ejemplo usando emoji*/}
             <Text style={{ fontSize: 60, textAlign: 'center' }}>🔒</Text>
           </View>
-          <Text style={styles.headerText}>
+          <Text style={Recoverstyles.headerText}>
             Crea una contraseña nueva y segura{'\n'}
           </Text>
         </LinearGradient>
@@ -31,7 +32,7 @@ const RecoverPassword = () => {
           <TextInput
             style={styles.input}
             placeholder="******"
-            placeholderTextColor="#BDBDBD"
+            placeholderTextColor={Colors.placeholder}
             secureTextEntry
             value={password}
             onChangeText={setPassword}
@@ -40,7 +41,7 @@ const RecoverPassword = () => {
           <TextInput
             style={styles.input}
             placeholder="******"
-            placeholderTextColor="#BDBDBD"
+            placeholderTextColor={Colors.placeholder}
             secureTextEntry
             value={confirm}
             onChangeText={setConfirm}
@@ -55,20 +56,8 @@ const RecoverPassword = () => {
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        borderRadius: 30,
-        overflow: 'hidden',
-    },
-    header: {
-        paddingTop: 40,
-        paddingBottom: 30,
-        alignItems: 'center',
-        borderBottomLeftRadius: 30,
-        borderBottomRightRadius: 30,
-    },
+const Recoverstyles = StyleSheet.create({
+    
     lockIcon:{
         marginBottom: 10,
         alignItems: 'center',
@@ -82,28 +71,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         textAlign: 'center',
     },
-    form:{
-        flex: 1,
-        marginTop: 40,
-        paddingHorizontal: 30,
-    },
-    label:{
-        color: '#BDBDBD',
-        fontSize: 12,
-        marginBottom: 10,
-        letterSpacing: 1,
-        fontWeight: 'bold',
-    },
-    input: {
-        backgroundColor: '#F2F2F2',
-        borderRadius: 20,
-        paddingHorizontal: 18,
-        paddingVertical: 12,
-        fontSize: 16,
-        height: 50,
-        color: '#333',
-        marginBottom: 20,
-    },
     button:{
         backgroundColor: '#3D7A64',
         borderRadius: 20,
@@ -115,9 +82,7 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
         fontWeight: 'bold',
-        textTransform: 'none',
-    },
-
+    }
 });
 
 export default RecoverPassword;

@@ -17,10 +17,11 @@ const WelcomeScreen = () => {
                 end={{ x: 1, y: 1 }}
             />
             <View style={customStyles.welcomeContent}>
+                <View style={{ height: 32 }} />
                 <Text style={customStyles.welcomeTitle}>Bienvenido a</Text>
                 <Text style={customStyles.welcomeBrand}>BioNeo</Text>
                 <Text style={customStyles.welcomeSubtitle}>Tecnología que cultiva el futuro</Text>
-                <Image source={leaf} style={customStyles.welcomeLeaf} />
+                <Image source={leaf} style={[customStyles.welcomeLeaf, { width: 300, height: 180 }]} />
                 <View style={customStyles.welcomeButtonRow}>
                     <TouchableOpacity style={[styles.button, customStyles.bigButton]}>
                         <Text style={[styles.buttonText, customStyles.bigButtonText]}>iniciar sesión</Text>

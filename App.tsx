@@ -1,9 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import Password from './screens/Password';
-import CreateAC from './screens/CreateAC'; 
+import CreateAC from './screens/CreateAC';
+import RecoverPassword from './screens/RecoverPassword'; 
 import Login from './screens/LogIn';
-import RecoverPassword from './screens/RecoverPassword';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 

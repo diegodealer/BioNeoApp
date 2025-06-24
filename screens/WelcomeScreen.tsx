@@ -5,7 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import styles from "../constants/styles";
 
 // Asegúrate de que la ruta sea correcta y la imagen exista
-const leaf = require("../assets/leaf.png");
+const leaf = require("../assets/images/pngtree-cartoon-leaf-illustration-png-image_9036566.png"); // ruta de ejemplo, cambiar luego de agregar el logo final 
 
 const WelcomeScreen = () => {
     return (
@@ -22,11 +22,11 @@ const WelcomeScreen = () => {
                 <Text style={customStyles.welcomeSubtitle}>Tecnología que cultiva el futuro</Text>
                 <Image source={leaf} style={customStyles.welcomeLeaf} />
                 <View style={customStyles.welcomeButtonRow}>
-                    <TouchableOpacity style={[styles.button, { marginHorizontal: 8 }]}>
-                        <Text style={styles.buttonText}>iniciar sesión</Text>
+                    <TouchableOpacity style={[styles.button, customStyles.bigButton]}>
+                        <Text style={[styles.buttonText, customStyles.bigButtonText]}>iniciar sesión</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.button, { marginHorizontal: 8 }]}>
-                        <Text style={styles.buttonText}>Registrate</Text>
+                    <TouchableOpacity style={[styles.button, customStyles.bigButton]}>
+                        <Text style={[styles.buttonText, customStyles.bigButtonText]}>registrate</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -37,7 +37,7 @@ const WelcomeScreen = () => {
 const customStyles = StyleSheet.create({
     welcomeHeader: {
         width: '100%',
-        height: 140,
+        height: 160,
         borderBottomLeftRadius: 30,
         borderBottomRightRadius: 30,
         position: 'absolute',
@@ -48,39 +48,49 @@ const customStyles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'flex-start',
-        marginTop: 120,
+        marginTop: 140,
         paddingHorizontal: 20,
     },
     welcomeTitle: {
-        fontSize: 36,
+        fontSize: 44,
         color: '#222',
         fontWeight: '400',
         marginBottom: 0,
         marginTop: 10,
     },
     welcomeBrand: {
-        fontSize: 48,
+        fontSize: 56,
         fontWeight: 'bold',
         fontStyle: 'italic',
         color: '#222',
         marginBottom: 8,
     },
     welcomeSubtitle: {
-        fontSize: 18,
+        fontSize: 24,
         color: '#444',
         textAlign: 'center',
-        marginBottom: 18,
+        marginBottom: 24,
     },
     welcomeLeaf: {
-        width: 120,
-        height: 70,
+        width: 200,
+        height: 120,
         resizeMode: 'contain',
-        marginBottom: 30,
+        marginBottom: 40,
     },
     welcomeButtonRow: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginTop: 10,
+        marginTop: 20,
+    },
+    bigButton: {
+        paddingVertical: 18,
+        paddingHorizontal: 32,
+        marginHorizontal: 12,
+        borderRadius: 24,
+        minWidth: 160,
+    },
+    bigButtonText: {
+        fontSize: 22,
     },
 });
 

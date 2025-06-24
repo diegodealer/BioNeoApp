@@ -8,13 +8,15 @@ import RecoverPassword from './screens/RecoverPassword';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import WelcomeScreen from './screens/WelcomeScreen';
+import ChatBoot from './screens/ChatBoot';
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Welcome" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName="ChatBoot" screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="ChatBoot" component={ChatBoot} />
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
         <Stack.Screen name="profile" component={ProfileEdit} />
         <Stack.Screen name="Login" component={Login} />

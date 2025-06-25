@@ -8,6 +8,7 @@ import styles from "../constants/styles";
 const leaf = require("../assets/images/pngtree-cartoon-leaf-illustration-png-image_9036566.png"); // ruta de ejemplo, cambiar luego de agregar el logo final 
 
 const WelcomeScreen = () => {
+    const navigation = useNavigation<any>();
     return (
         <View style={styles.container}>
             <LinearGradient
@@ -23,10 +24,16 @@ const WelcomeScreen = () => {
                 <Text style={customStyles.welcomeSubtitle}>Tecnología que cultiva el futuro</Text>
                 <Image source={leaf} style={[customStyles.welcomeLeaf, { width: 300, height: 180 }]} />
                 <View style={customStyles.welcomeButtonRow}>
-                    <TouchableOpacity style={[styles.button, customStyles.bigButton]}>
+                    <TouchableOpacity
+                        style={[styles.button, customStyles.bigButton]}
+                        onPress={() => navigation.navigate("Login")}
+                    >
                         <Text style={[styles.buttonText, customStyles.bigButtonText]}>iniciar sesión</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.button, customStyles.bigButton]}>
+                    <TouchableOpacity
+                        style={[styles.button, customStyles.bigButton]}
+                        onPress={() => navigation.navigate("CreateAC")}
+                    >
                         <Text style={[styles.buttonText, customStyles.bigButtonText]}>registrate</Text>
                     </TouchableOpacity>
                 </View>

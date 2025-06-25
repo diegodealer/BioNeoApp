@@ -10,7 +10,7 @@ const CreateAC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const navigation = useNavigation();
+    const navigation = useNavigation<any>();
 
     return (
 <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
@@ -29,7 +29,7 @@ const CreateAC = () => {
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                 <Text style={styles.subtitle}>¿Ya te has registrado? </Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("Login")}>
                     <Text style={[styles.subtitle, { textDecorationLine: 'underline', color: '#fff' }]}>Ingresar</Text>
                 </TouchableOpacity>
             </View>
@@ -72,7 +72,7 @@ const CreateAC = () => {
                 onChangeText={setConfirmPassword}
                 keyboardType="default"
             />
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Welcome")}>
                 <Text style={styles.buttonText}>Registrarse</Text>
             </TouchableOpacity>
         </View>

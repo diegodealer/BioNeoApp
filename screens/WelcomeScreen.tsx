@@ -28,13 +28,13 @@ const WelcomeScreen = () => {
                         style={[styles.button, customStyles.bigButton]}
                         onPress={() => navigation.navigate("Login")}
                     >
-                        <Text style={[styles.buttonText, customStyles.bigButtonText]}>iniciar sesión</Text>
+                        <Text style={[styles.buttonText, customStyles.bigButtonText]}>Iniciar sesión</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.button, customStyles.bigButton]}
                         onPress={() => navigation.navigate("CreateAC")}
                     >
-                        <Text style={[styles.buttonText, customStyles.bigButtonText]}>registrate</Text>
+                        <Text style={[styles.buttonText, customStyles.bigButtonText]}>Registrate</Text>
                     </TouchableOpacity>
                 </View>
             </View>

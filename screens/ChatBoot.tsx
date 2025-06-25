@@ -9,7 +9,7 @@ const ChatBoot = () => {
     return (
         <KeyboardAvoidingView
             style={{ flex: 1 }}
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            behavior="padding"
         >
             <View style={styles.container}>
                 {/* Botón de regreso */}

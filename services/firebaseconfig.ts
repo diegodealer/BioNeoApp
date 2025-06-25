@@ -8,7 +8,7 @@ const firebaseConfig = {
   authDomain: "bioneoapp.firebaseapp.com",
   databaseURL: "https://bioneoapp-default-rtdb.firebaseio.com/",
   projectId: "bioneoapp",
-  storageBucket: "bioneoapp.firebasestorage.app",
+  storageBucket: "bioneoapp.appspot.com",
   messagingSenderId: "435838769440",
   appId: "1:435838769440:web:20f692ee2cfc34b62f1f45",
 };

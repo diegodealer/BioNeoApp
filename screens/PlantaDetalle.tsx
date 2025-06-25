@@ -1,25 +1,14 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TextInput,
-  Button,
-  Alert,
-  ScrollView,
-} from 'react-native';
+import { View, Text, StyleSheet, Image, TextInput, Button, Alert, ScrollView, Dimensions} from 'react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { BarChart } from 'react-native-chart-kit';
-import { Dimensions } from 'react-native';
 import { ref, update } from 'firebase/database';
-import { db } from '../firebaseconfig';
-import { Planta } from './Menu';
-
+import { db } from '../services/firebaseconfig';
+import { Planta, RootStackParamList } from '../types';
 const screenWidth = Dimensions.get('window').width;
 
 const PlantaDetalle = () => {
-  const route = useRoute<RouteProp<{ params: { planta: Planta } }, 'params'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'PlantaDetalle'>>();
   const { planta } = route.params;
 
   const [nombre, setNombre] = useState(planta.nombre);
@@ -27,9 +16,9 @@ const PlantaDetalle = () => {
 
   const actualizarNombre = async () => {
     try {
-      await update(ref(db, `plants/${planta.id}`), {
-        nombre,
-        nombreCientifico,
+      await update(ref(db, `Plantas/${planta.id}`), {
+        name: nombre,
+        ScientificName: nombreCientifico,
       });
       Alert.alert('Actualizado', 'Los datos se actualizaron correctamente');
     } catch (error) {
@@ -61,20 +50,19 @@ const PlantaDetalle = () => {
         data={data}
         width={screenWidth - 32}
         height={220}
-        yAxisLabel=""             
-        yAxisSuffix=""            
+        yAxisLabel=""
+        yAxisSuffix=""
         chartConfig={{
-            backgroundColor: '#e26a00',
-            backgroundGradientFrom: '#fb8c00',
-            backgroundGradientTo: '#ffa726',
-            decimalPlaces: 0,
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            labelColor: () => '#fff',
+          backgroundColor: '#e26a00',
+          backgroundGradientFrom: '#fb8c00',
+          backgroundGradientTo: '#ffa726',
+          decimalPlaces: 0,
+          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+          labelColor: () => '#fff',
         }}
         verticalLabelRotation={0}
         fromZero
-        />
-
+      />
 
       <View style={styles.editSection}>
         <Text style={styles.editLabel}>Editar Nombre:</Text>
@@ -89,7 +77,11 @@ const PlantaDetalle = () => {
       </View>
 
       <View style={styles.regarBtn}>
-        <Button title="Regar planta" color="#2e7d32" onPress={() => Alert.alert('Planta regada')} />
+        <Button
+          title="Regar planta"
+          color="#2e7d32"
+          onPress={() => Alert.alert('Planta regada')}
+        />
       </View>
     </ScrollView>
   );
@@ -113,6 +105,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     marginVertical: 10,
+    borderRadius: 8,
   },
   editSection: {
     marginTop: 20,

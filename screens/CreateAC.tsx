@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import styles from '../constants/styles';
@@ -21,23 +21,29 @@ const CreateAC = () => {
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
         >
-            <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+             <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                 <Text style={styles.backButtonText}>←</Text>
             </TouchableOpacity>
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={styles.title}>Crea una cuenta nueva</Text>
+                <Text style={[styles.title, customStyles.bigTitle]}>Crea una cuenta nueva</Text>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={styles.subtitle}>¿Ya te has registrado? </Text>
+                <Text style={[styles.subtitle, customStyles.bigSubtitle]}>¿Ya te has registrado? </Text>
                 <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-                    <Text style={[styles.subtitle, { textDecorationLine: 'underline', color: '#fff' }]}>Ingresar</Text>
+                    <Text style={[
+                        styles.subtitle,
+                        customStyles.bigIngresar,
+                        { textDecorationLine: 'underline', color: '#fff' }
+                    ]}>
+                        Ingresar
+                    </Text>
                 </TouchableOpacity>
             </View>
         </LinearGradient>
         <View style={styles.form}>
-            <Text style={styles.label}>NOMBRE</Text>
+            <Text style={[styles.label, customStyles.bigLabel]}>NOMBRE</Text>
             <TextInput
-                style={styles.input}
+                style={[styles.input, customStyles.bigInput]}
                 placeholder="Ingresa tu nombre"
                 placeholderTextColor="#BDBDBD"
                 value={username}
@@ -45,27 +51,27 @@ const CreateAC = () => {
                 keyboardType="default"
                 autoCapitalize="none"
             />
-            <Text style={styles.label}>CORREO ELECTRÓNICO</Text>
+            <Text style={[styles.label, customStyles.bigLabel]}>CORREO ELECTRÓNICO</Text>
             <TextInput
-                style={styles.input}
+                style={[styles.input, customStyles.bigInput]}
                 placeholder="Ingresa tu correo electrónico"
                 placeholderTextColor="#BDBDBD"
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"
             />
-            <Text style={styles.label}>CONTRASEÑA</Text>
+            <Text style={[styles.label, customStyles.bigLabel]}>CONTRASEÑA</Text>
             <TextInput
-                style={styles.input}
+                style={[styles.input, customStyles.bigInput]}
                 placeholder="Ingresa tu contraseña"
                 placeholderTextColor="#BDBDBD"
                 value={password}
                 onChangeText={setPassword}
                 keyboardType="default"
             />
-            <Text style={styles.label}>CONFIRMAR CONTRASENA</Text>
+            <Text style={[styles.label, customStyles.bigLabel]}>CONFIRMAR CONTRASENA</Text>
             <TextInput
-                style={styles.input}
+                style={[styles.input, customStyles.bigInput]}
                 placeholder="Confirma tu contraseña"
                 placeholderTextColor="#BDBDBD"
                 value={confirmPassword}
@@ -73,13 +79,36 @@ const CreateAC = () => {
                 keyboardType="default"
             />
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Welcome")}>
-                <Text style={styles.buttonText}>Registrarse</Text>
+                <Text style={[styles.buttonText, customStyles.bigButtonText]}>Registrarse</Text>
             </TouchableOpacity>
         </View>
     </View>
 </KeyboardAvoidingView>
     );
 };
+
+const customStyles = StyleSheet.create({
+    bigTitle: {
+        fontSize: 32,
+        fontWeight: 'bold',
+    },
+    bigSubtitle: {
+        fontSize: 20,
+    },
+    bigIngresar: {
+        fontSize: 22,
+        fontWeight: 'bold',
+    },
+    bigLabel: {
+        fontSize: 18,
+    },
+    bigInput: {
+        fontSize: 18,
+    },
+    bigButtonText: {
+        fontSize: 22,
+    },
+});
 
 export default CreateAC;
    

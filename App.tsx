@@ -15,12 +15,14 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="ChatBoot" screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="ChatBoot" component={ChatBoot} />
+      <Stack.Navigator initialRouteName="Welcome" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
+        <Stack.Screen name="RecoverPassword" component={RecoverPassword} />
         <Stack.Screen name="profile" component={ProfileEdit} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Password" component={Password} />
+        <Stack.Screen name="CreateAC" component={CreateAC} />
+        <Stack.Screen name="ChatBoot" component={ChatBoot} />
         {/* Otras pantallas aquí */}
       </Stack.Navigator>
     </NavigationContainer>  

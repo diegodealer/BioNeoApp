@@ -14,9 +14,6 @@ type RootStackParamList = {
   PlantaDetalle: { planta: Planta };
 };
 
-// Usa el tipo correcto para navigation
-const navigation = useNavigation<StackNavigationProp<RootStackParamList, 'Menu'>>();
-
 
 interface Planta {
   id: string;
@@ -40,7 +37,9 @@ export default function Menu() {
   const [plantas, setPlantas] = useState<Planta[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
-  const navigation = useNavigation();
+  // Usa el navigation tipado de arriba, no lo redeclares aquí
+
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList, 'Menu'>>();
 
   useEffect(() => {
     fetchPlantas();

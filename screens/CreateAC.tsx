@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, StyleSheet, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import styles from '../constants/styles';
@@ -14,6 +14,7 @@ const CreateAC = () => {
 
     return (
 <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
     <View style={styles.container}>
         <LinearGradient
             colors={[Colors.mint_green, Colors.green_emerald]}
@@ -83,6 +84,7 @@ const CreateAC = () => {
             </TouchableOpacity>
         </View>
     </View>
+    </ScrollView>
 </KeyboardAvoidingView>
     );
 };

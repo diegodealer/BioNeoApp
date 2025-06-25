@@ -1,6 +1,7 @@
 // firebaseConfig.ts
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
+import { getStorage } from 'firebase/storage';
 
 // Tu configuración
 const firebaseConfig = {
@@ -18,4 +19,7 @@ const app = initializeApp(firebaseConfig);
 
 // Inicializa Realtime Database y la exporta
 export const db = getDatabase(app);
+export const storage = getStorage(app);
 
+// Exporta la instancia de Firebase App
+export default firebaseConfig;

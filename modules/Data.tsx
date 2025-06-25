@@ -1,4 +1,4 @@
-import  db  from './firebaseconfig';
+import  db  from '../services/firebaseconfig';
 import { ref, set, get, update, remove, onValue } from 'firebase/database';
 
 // Example: Write data

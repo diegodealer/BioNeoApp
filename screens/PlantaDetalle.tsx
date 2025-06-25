@@ -1,131 +1,95 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TextInput, Button, Alert, ScrollView, Dimensions} from 'react-native';
-import { RouteProp, useRoute } from '@react-navigation/native';
+import React from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
-import { ref, update } from 'firebase/database';
-import { db } from '../services/firebaseconfig';
-import { Planta, RootStackParamList } from '../types';
-const screenWidth = Dimensions.get('window').width;
+import { useNavigation, useRoute } from '@react-navigation/native';
 
-const PlantaDetalle = () => {
-  const route = useRoute<RouteProp<RootStackParamList, 'PlantaDetalle'>>();
-  const { planta } = route.params;
+export default function PlantaDetalle() {
+  const navigation = useNavigation();
+  const route = useRoute();
+  // Recibe la planta desde navigation params
+  const { planta } = route.params as any;
 
-  const [nombre, setNombre] = useState(planta.nombre);
-  const [nombreCientifico, setNombreCientifico] = useState(planta.nombreCientifico);
-
-  const actualizarNombre = async () => {
-    try {
-      await update(ref(db, `Plantas/${planta.id}`), {
-        name: nombre,
-        ScientificName: nombreCientifico,
-      });
-      Alert.alert('Actualizado', 'Los datos se actualizaron correctamente');
-    } catch (error) {
-      Alert.alert('Error', 'No se pudo actualizar');
-    }
-  };
-
+  // Datos para el gráfico (puedes adaptar según tus datos reales)
   const data = {
-    labels: ['Luminosidad', 'Humedad', 'Temperatura', 'Humedad suelo'],
+    labels: ['Luminosidad', 'Humedad', 'Temperatura', 'Humedad del suelo'],
     datasets: [
       {
         data: [
-          planta.luminosidad,
-          planta.humedad,
-          planta.temperatura,
-          planta.humedadSuelo,
+          Number(planta.datos?.luminosity?.replace('%', '') || 0),
+          Number(planta.datos?.humidity?.replace('%', '') || 0),
+          Number(planta.datos?.temperature?.replace('°C', '') || 0),
+          Number(planta.datos?.soilhumidity?.replace('%', '') || 0),
         ],
       },
     ],
   };
 
+  const handleRegar = () => {
+    Alert.alert('¡Listo!', 'La planta ha sido regada 🌱');
+    // Aquí puedes agregar lógica para actualizar la base de datos si lo deseas
+  };
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>{nombre}</Text>
-      <Text style={styles.subtitle}>({nombreCientifico})</Text>
-      <Image source={{ uri: planta.imagenUrl }} style={styles.image} />
-
-      <BarChart
-        data={data}
-        width={screenWidth - 32}
-        height={220}
-        yAxisLabel=""
-        yAxisSuffix=""
-        chartConfig={{
-          backgroundColor: '#e26a00',
-          backgroundGradientFrom: '#fb8c00',
-          backgroundGradientTo: '#ffa726',
-          decimalPlaces: 0,
-          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          labelColor: () => '#fff',
-        }}
-        verticalLabelRotation={0}
-        fromZero
-      />
-
-      <View style={styles.editSection}>
-        <Text style={styles.editLabel}>Editar Nombre:</Text>
-        <TextInput style={styles.input} value={nombre} onChangeText={setNombre} />
-        <Text style={styles.editLabel}>Editar Nombre Científico:</Text>
-        <TextInput
-          style={styles.input}
-          value={nombreCientifico}
-          onChangeText={setNombreCientifico}
-        />
-        <Button title="Guardar cambios" onPress={actualizarNombre} />
+    <View style={styles.container}>
+      <View style={styles.card}>
+        <Text style={styles.title}>{planta.name?.toUpperCase()}</Text>
+        <Text style={styles.subtitle}>(NOMBRE {planta.scientificName?.toUpperCase() || 'NO DEFINIDO'})</Text>
+        <Image source={{ uri: planta.imageurl }} style={styles.image} />
+        <BarChart
+          data={data}
+          width={Dimensions.get('window').width - 64}
+          height={220}
+          yAxisLabel=""
+          chartConfig={{
+            backgroundColor: '#6d3b2c',
+            backgroundGradientFrom: '#6d3b2c',
+            backgroundGradientTo: '#6d3b2c',
+            decimalPlaces: 0,
+            color: (opacity = 1) => `rgba(0, 230, 230, ${opacity})`,
+            labelColor: () => '#fff',
+            style: { borderRadius: 16 },
+            propsForBackgroundLines: { stroke: '#fff' },
+          }}
+          style={{ marginVertical: 8, borderRadius: 16 }} yAxisSuffix={''}        />
+        <TouchableOpacity style={styles.regarBtn} onPress={handleRegar}>
+          <Text style={styles.regarText}>Regar planta</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.verMenosBtn} onPress={() => navigation.goBack()}>
+          <Text style={styles.verMenosText}>🔍 Ver menos</Text>
+        </TouchableOpacity>
       </View>
-
-      <View style={styles.regarBtn}>
-        <Button
-          title="Regar planta"
-          color="#2e7d32"
-          onPress={() => Alert.alert('Planta regada')}
-        />
-      </View>
-    </ScrollView>
+    </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  container: {
+  container: { flex: 1, backgroundColor: '#fff', paddingTop: 20 },
+  card: {
+    backgroundColor: '#6d3b2c',
+    borderRadius: 16,
+    margin: 16,
+    padding: 12,
+    borderWidth: 3,
+    borderColor: '#fff',
     alignItems: 'center',
-    padding: 16,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginTop: 10,
-  },
-  subtitle: {
-    fontSize: 18,
-    fontStyle: 'italic',
-  },
-  image: {
-    width: 120,
-    height: 120,
-    marginVertical: 10,
-    borderRadius: 8,
-  },
-  editSection: {
-    marginTop: 20,
-    width: '100%',
-  },
-  editLabel: {
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 8,
-    marginBottom: 10,
-    borderRadius: 6,
-  },
+  title: { color: '#fff', fontWeight: 'bold', fontSize: 22, marginBottom: 2 },
+  subtitle: { color: '#fff', fontSize: 12, marginBottom: 8 },
+  image: { width: 120, height: 120, borderRadius: 60, backgroundColor: '#fff', marginBottom: 8 },
   regarBtn: {
-    marginTop: 20,
-    width: '100%',
+    backgroundColor: '#2e7d5b',
+    borderRadius: 20,
+    paddingHorizontal: 32,
+    paddingVertical: 12,
+    marginTop: 16,
   },
+  regarText: { color: '#fff', fontWeight: 'bold', fontSize: 18, textAlign: 'center' },
+  verMenosBtn: {
+    marginTop: 12,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  verMenosText: { color: '#6d3b2c', fontWeight: 'bold', fontSize: 14 },
 });
-
-export default PlantaDetalle;

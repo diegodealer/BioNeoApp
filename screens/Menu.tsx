@@ -1,207 +1,216 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, StyleSheet, Text, Image, TouchableOpacity, StatusBar, Alert } from 'react-native';
-import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
-import * as ImagePicker from 'expo-image-picker';
-import { ref as storageRef, uploadBytes, getDownloadURL, getStorage } from 'firebase/storage';
-import { ref as dbRef, get, child, set} from 'firebase/database';
-import { db as realtimeDb } from '../services/firebaseconfig';
-import uuid from 'react-native-uuid';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, FlatList, ActivityIndicator, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
+import * as DocumentPicker from 'expo-document-picker';
+import * as FileSystem from 'expo-file-system';
+import { ref as dbRef, get, update } from 'firebase/database';
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { db, storage } from '../services/firebaseconfig';
+import { useNavigation, RouteProp} from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Planta, RootStackParamList } from '../types';
 
-type MenuScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Menu'>;
-
-const Menu = () => {
-  const [plantas, setPlantas] = useState<Planta[]>([]);
-  const navigation = useNavigation<MenuScreenNavigationProp>();
-
-  useEffect(() => {
-    cargarPlantas();
-  }, []);
-
-  const cargarPlantas = async () => {
-    const snapshot = await get(child(dbRef(realtimeDb), 'Plantas'));
-    if (snapshot.exists()) {
-      const data = snapshot.val();
-      const lista = Object.keys(data).map(id => ({
-        id,
-        nombre: data[id].name,
-        nombreCientifico: data[id].ScientificName,
-        imagenUrl: data[id].imageurl,
-        humedad: Number(data[id].datos?.humidity ?? 0),
-        temperatura: Number(data[id].datos?.temperature ?? 0),
-        luminosidad: Number(data[id].datos?.luminosity ?? 0),
-        humedadSuelo: Number(data[id].datos?.soilhumidity ?? 0),
-      }));
-      setPlantas(lista);
-    } else {
-      setPlantas([]);
-    }
-  };
-
-  const subirImagen = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
-    });
-
-    if (!result.canceled && result.assets?.length) {
-      const uri = result.assets[0].uri;
-      const response = await fetch(uri);
-      const blob = await response.blob();
-
-      const id = uuid.v4() as string;
-      const nombreArchivo = `plantas/${id}.jpg`;
-      const storage = getStorage();
-      const imgRef = storageRef(storage, nombreArchivo);
-
-      await uploadBytes(imgRef, blob);
-      const url = await getDownloadURL(imgRef);
-
-      const planta = {
-        name: 'PLANTA NUEVA',
-        ScientificName: 'Nombre Científico',
-        imageurl: url,
-        datos: {
-          humidity: '60',
-          temperature: '22',
-          luminosity: '15',
-          soilhumidity: '40',
-        },
-      };
-
-      await set(dbRef(realtimeDb, `Plantas/${id}`), planta);
-      Alert.alert('Listo', 'Planta agregada con éxito');
-      cargarPlantas();
-    }
-  };
-
-  const tomarFoto = async () => {
-    const result = await ImagePicker.launchCameraAsync({
-      quality: 1,
-    });
-
-    if (!result.canceled && result.assets?.length) {
-      const uri = result.assets[0].uri;
-      const response = await fetch(uri);
-      const blob = await response.blob();
-
-      const id = uuid.v4() as string;
-      const nombreArchivo = `plantas/${id}.jpg`;
-      const storage = getStorage();
-      const imgRef = storageRef(storage, nombreArchivo);
-
-      await uploadBytes(imgRef, blob);
-      const url = await getDownloadURL(imgRef);
-
-      const planta = {
-        name: 'PLANTA NUEVA',
-        ScientificName: 'Nombre Científico',
-        imageurl: url,
-        datos: {
-          humidity: '60',
-          temperature: '22',
-          luminosity: '15',
-          soilhumidity: '40',
-        },
-      };
-
-      await set(dbRef(realtimeDb, `Plantas/${id}`), planta);
-      Alert.alert('Listo', 'Planta agregada desde cámara');
-      cargarPlantas();
-    }
-  };
-
-  const Item = ({ item }: { item: Planta }) => (
-    <View style={styles.item}>
-      <Text style={styles.title}>{item.nombre}</Text>
-      <Text>({item.nombreCientifico})</Text>
-      <Image source={{ uri: item.imagenUrl }} style={styles.image} />
-      <TouchableOpacity
-        style={styles.verMasBtn}
-        onPress={() => navigation.navigate('PlantaDetalle', { planta: item })}
-      >
-        <Text style={styles.verMasTxt}>Ver más</Text>
-      </TouchableOpacity>
-    </View>
-  );
-
-  return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
-        <Text style={styles.header}>Plantas</Text>
-        <View style={styles.btnRow}>
-          <TouchableOpacity style={styles.btn} onPress={subirImagen}>
-            <Text style={styles.btnText}>Desde galería</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btn} onPress={tomarFoto}>
-            <Text style={styles.btnText}>Desde cámara</Text>
-          </TouchableOpacity>
-        </View>
-        <FlatList
-          data={plantas}
-          renderItem={({ item }) => <Item item={item} />}
-          keyExtractor={item => item.id}
-        />
-      </SafeAreaView>
-    </SafeAreaProvider>
-  );
+// Define los tipos de tus rutas
+type RootStackParamList = {
+  Menu: undefined;
+  PlantaDetalle: { planta: Planta };
 };
 
+// Usa el tipo correcto para navigation
+const navigation = useNavigation<StackNavigationProp<RootStackParamList, 'Menu'>>();
+
+
+interface Planta {
+  id: string;
+  name: string;
+  scientificName: string;
+  imageurl: string;
+  datos: {
+    humidity: string;
+    luminosity: string;
+    soilhumidity: string;
+    temperature: string;
+  };
+}
+
+async function uriToBlob(uri: string): Promise<Blob> {
+  const file = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
+  return await fetch(`data:image/jpeg;base64,${file}`).then(res => res.blob());
+}
+
+export default function Menu() {
+  const [plantas, setPlantas] = useState<Planta[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    fetchPlantas();
+  }, []);
+
+  const fetchPlantas = async () => {
+    setLoading(true);
+    try {
+      const plantasRef = dbRef(db, 'Plantas');
+      const snapshot = await get(plantasRef);
+      const data = snapshot.val();
+      if (!data) {
+        setPlantas([]);
+      } else {
+        const plantasArray = Object.keys(data).map(id => ({
+          id,
+          name: data[id].name,
+          scientificName: data[id].ScientificName,
+          imageurl: data[id].imageurl,
+          datos: data[id].datos,
+        }));
+        setPlantas(plantasArray);
+      }
+    } catch (err) {
+      Alert.alert('Error', 'No se pudieron cargar las plantas');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const pickImage = async (planta: Planta) => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: 'image/*',
+        copyToCacheDirectory: true,
+        multiple: false,
+      });
+
+      if (result.assets && result.assets.length > 0 && result.assets[0].uri) {
+        handleImageUpload(result.assets[0].uri, planta.id);
+      }
+    } catch (error) {
+      Alert.alert('Error', 'No se pudo seleccionar la imagen');
+    }
+  };
+
+  const handleImageUpload = async (uri: string, plantaId: string) => {
+    try {
+      setUploading(true);
+      const blob = await uriToBlob(uri);
+
+      const filename = `plantas/${plantaId}_${Date.now()}.jpg`;
+      const imgRef = storageRef(storage, filename);
+      await uploadBytes(imgRef, blob);
+
+      const downloadURL = await getDownloadURL(imgRef);
+
+      // Actualiza solo el campo imageurl de la planta existente
+      const plantaDbRef = dbRef(db, `Plantas/${plantaId}`);
+      await update(plantaDbRef, { imageurl: downloadURL });
+
+      Alert.alert('Éxito', 'Imagen subida correctamente');
+      fetchPlantas();
+    } catch (error) {
+      console.log('Error al subir imagen:', error);
+      Alert.alert('Error', 'No se pudo subir la imagen');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" color="#007AFF" />
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      {uploading && (
+        <View style={styles.center}>
+          <ActivityIndicator size="small" color="#007AFF" />
+          <Text>Subiendo imagen...</Text>
+        </View>
+      )}
+      <Text style={styles.header}>PLANTAS</Text>
+      <FlatList
+        data={plantas}
+        keyExtractor={item => item.id}
+        contentContainerStyle={{ paddingBottom: 80 }}
+        renderItem={({ item }) => (
+          <View style={styles.card}>
+            <TouchableOpacity onPress={() => pickImage(item)}>
+              {item.imageurl ? (
+                <Image source={{ uri: item.imageurl }} style={styles.image} />
+              ) : (
+                <View style={styles.placeholder}>
+                  <Text>Sin imagen</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+            <View style={styles.cardContent}>
+              <Text style={styles.cardTitle}>{item.name?.toUpperCase()}</Text>
+              <Text style={styles.cardSubtitle}>(NOMBRE {item.scientificName?.toUpperCase() || 'NO DEFINIDO'})</Text>
+              <Text style={styles.cardInfo}>
+                HUMEDAD: {item.datos?.humidity || '--'}   TEMPERATURA: {item.datos?.temperature || '--'}
+              </Text>
+              <Text style={styles.cardInfo}>
+                LUMINOSIDAD: {item.datos?.luminosity || '--'}
+              </Text>
+              <TouchableOpacity style={styles.verMasBtn} onPress={() => navigation.navigate('PlantaDetalle', { planta: item })}>
+                <Text style={styles.verMasText}>🔍 Ver más</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+      />
+      <TouchableOpacity style={styles.fab}>
+        <Text style={styles.fabText}>+</Text>
+      </TouchableOpacity>
+      <View style={styles.bottomBar}>
+        <TouchableOpacity style={styles.bottomBtn}>
+          <Text style={styles.bottomIcon}>💬</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.bottomBtn}>
+          <Text style={styles.bottomIcon}>🏠</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-  },
-  header: {
-    fontSize: 24,
-    textAlign: 'center',
-    marginVertical: 10,
-    fontWeight: 'bold',
-  },
-  item: {
-    backgroundColor: '#f2e2c4',
-    padding: 20,
-    marginVertical: 8,
+  container: { flex: 1, backgroundColor: '#fff', paddingTop: 20 },
+  center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  header: { fontSize: 22, fontWeight: 'bold', alignSelf: 'center', marginVertical: 8, letterSpacing: 2 },
+  card: {
+    backgroundColor: '#6d3b2c',
+    borderRadius: 16,
     marginHorizontal: 16,
-    borderRadius: 10,
+    marginVertical: 10,
+    padding: 12,
+    borderWidth: 3,
+    borderColor: '#fff',
+    flexDirection: 'row',
     alignItems: 'center',
   },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
+  image: { width: 80, height: 80, borderRadius: 12, marginRight: 12, backgroundColor: '#fff' },
+  placeholder: {
+    width: 80, height: 80, borderRadius: 12, marginRight: 12,
+    backgroundColor: '#eee', justifyContent: 'center', alignItems: 'center'
   },
-  image: {
-    width: 100,
-    height: 100,
-    marginTop: 10,
-    borderRadius: 8,
+  cardContent: { flex: 1 },
+  cardTitle: { color: '#fff', fontWeight: 'bold', fontSize: 18, marginBottom: 2 },
+  cardSubtitle: { color: '#fff', fontSize: 12, marginBottom: 4 },
+  cardInfo: { color: '#fff', fontSize: 12 },
+  verMasBtn: { marginTop: 8, alignSelf: 'flex-start', backgroundColor: '#fff', borderRadius: 8, paddingHorizontal: 10, paddingVertical: 4 },
+  verMasText: { color: '#6d3b2c', fontWeight: 'bold', fontSize: 14 },
+  fab: {
+    position: 'absolute', bottom: 60, left: '50%', marginLeft: -28,
+    backgroundColor: '#fff', width: 56, height: 56, borderRadius: 28,
+    justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: '#6d3b2c', elevation: 4,
   },
-  verMasBtn: {
-    marginTop: 10,
-    padding: 10,
-    backgroundColor: '#6fa18c',
-    borderRadius: 8,
+  fabText: { fontSize: 36, color: '#6d3b2c', fontWeight: 'bold' },
+  bottomBar: {
+    position: 'absolute', bottom: 0, left: 0, right: 0,
+    flexDirection: 'row', backgroundColor: '#6d3b2c', height: 56, justifyContent: 'space-around', alignItems: 'center'
   },
-  verMasTxt: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  btnRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 10,
-  },
-  btn: {
-    backgroundColor: '#6495ed',
-    padding: 10,
-    borderRadius: 8,
-  },
-  btnText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
+  bottomBtn: { flex: 1, alignItems: 'center' },
+  bottomIcon: { fontSize: 28, color: '#fff' },
 });
-
-export default Menu;

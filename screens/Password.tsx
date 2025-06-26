@@ -24,6 +24,7 @@ const Password = () => {
              <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                     <Text style={styles.backButtonText}>←</Text>
                 </TouchableOpacity>
+                <View style={{height: 32}}></View>
                 <Text style={[styles.title, customStyles.bigTitle]}>¿Has olvidado tu contraseña?</Text>
                 <Text style={[styles.subtitle, customStyles.bigSubtitle]}>Nueva contraseña</Text>
             </LinearGradient>

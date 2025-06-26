@@ -11,58 +11,61 @@ const RecoverPassword = () => {
     const [confirm, setConfirm] = useState('');
 
     return (
-     <KeyboardAvoidingView style={{ flex: 1 }} behavior='padding'>
-      <View style={styles.container}>
-        <LinearGradient
-          colors={[Colors.mint_green, Colors.green_emerald]}
-          style={styles.header}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
+  <KeyboardAvoidingView style={{ flex: 1 }} behavior='padding'>
+    <View style={styles.container}>
+      <LinearGradient
+        colors={[Colors.mint_green, Colors.green_emerald]}
+        style={[styles.header, { paddingTop: 32, paddingBottom: 24 }]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      >
+        <TouchableOpacity
+          style={{ left: 20, zIndex: 10, top: 50, position: 'absolute' }}
+          onPress={() => navigation.navigate("Password")}
         >
+          <Text style={{ color: '#fff', fontSize: 36 }}>←</Text>
+        </TouchableOpacity>
 
-          <TouchableOpacity
-            style={{ position: 'absolute', top: 20, left: 16, zIndex: 10 }}
-            onPress={() => navigation.navigate("Password")}
-          >
-            <Text style={{ color: '#fff', fontSize: 32 }}>←</Text>
-          </TouchableOpacity>
-          <View style={Recoverstyles.lockIcon}>
-            {/* Ejemplo usando emoji*/}
-            <Text style={{ fontSize: 60, textAlign: 'center' }}>🔒</Text>
-          </View>
-          <Text style={Recoverstyles.headerText}>
-            Crea una contraseña nueva y segura{'\n'}
-          </Text>
-        </LinearGradient>
-        <View style={styles.form}>
-          <Text style={[styles.label, Recoverstyles.bigLabel]}>NUEVA CONTRASEÑA</Text>
-          <TextInput
-            style={[styles.input, Recoverstyles.bigInput]}
-            placeholder="******"
-            placeholderTextColor={Colors.placeholder}
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-          />
-          <Text style={[styles.label, Recoverstyles.bigLabel]}>CONFIRMAR CONTRASEÑA</Text>
-          <TextInput
-            style={[styles.input, Recoverstyles.bigInput]}
-            placeholder="******"
-            placeholderTextColor={Colors.placeholder}
-            secureTextEntry
-            value={confirm}
-            onChangeText={setConfirm}
-          />
-          <TouchableOpacity style={styles.button}
-          onPress={() => navigation.navigate("CreateAC")}
-          >
-            <Text style={Recoverstyles.buttonText}>Confirmar cambios</Text> //styles
-          </TouchableOpacity>
+        {/* Ícono del candado */}
+        <View style={{ alignItems: 'center', marginTop: 50 }}>
+          <Text style={{ fontSize: 60 }}>🔒</Text>
         </View>
+
+        {/* Texto debajo del candado */}
+        <Text style={[Recoverstyles.headerText, { textAlign: 'center', marginTop: 12 }]}>
+          Crea una contraseña nueva{'\n'}y segura
+        </Text>
+      </LinearGradient>
+
+      <View style={styles.form}>
+        <Text style={[styles.label, Recoverstyles.bigLabel]}>NUEVA CONTRASEÑA</Text>
+        <TextInput
+          style={[styles.input, Recoverstyles.bigInput]}
+          placeholder="******"
+          placeholderTextColor={Colors.placeholder}
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
+        <Text style={[styles.label, Recoverstyles.bigLabel]}>CONFIRMAR CONTRASEÑA</Text>
+        <TextInput
+          style={[styles.input, Recoverstyles.bigInput]}
+          placeholder="******"
+          placeholderTextColor={Colors.placeholder}
+          secureTextEntry
+          value={confirm}
+          onChangeText={setConfirm}
+        />
+        <TouchableOpacity
+          style={[styles.button, { marginTop: 42 }]}
+          onPress={() => navigation.navigate("CreateAC")}
+        >
+          <Text style={Recoverstyles.buttonText}>Confirmar cambios</Text>
+        </TouchableOpacity>
       </View>
-    </KeyboardAvoidingView>
-        
-    );
+    </View>
+  </KeyboardAvoidingView>
+  );
 };
 
 const Recoverstyles = StyleSheet.create({

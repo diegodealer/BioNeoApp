@@ -19,6 +19,13 @@ const RecoverPassword = () => {
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
         >
+
+          <TouchableOpacity
+            style={{ position: 'absolute', top: 20, left: 16, zIndex: 10 }}
+            onPress={() => navigation.navigate("Password")}
+          >
+            <Text style={{ color: '#fff', fontSize: 32 }}>←</Text>
+          </TouchableOpacity>
           <View style={Recoverstyles.lockIcon}>
             {/* Ejemplo usando emoji*/}
             <Text style={{ fontSize: 60, textAlign: 'center' }}>🔒</Text>

@@ -7,26 +7,26 @@ import {LinearGradient} from 'expo-linear-gradient';
 
 
 const Password = () => {
-    const [email, setEmail] = useState('');
-    const navigation = useNavigation();
-    return (
-     <KeyboardAvoidingView style={{flex: 1}} behavior='padding'>
-        <View style ={styles.container}>  
-            <LinearGradient
+  const [email, setEmail] = useState('');
+  const navigation = useNavigation();
+  return (
+    <KeyboardAvoidingView style={{flex: 1}} behavior='padding'>
+      <View style ={styles.container}>  
+        <LinearGradient
             colors={[Colors.mint_green, Colors.green_emerald]}
             style={styles.header}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
-        >
-            <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-             <Text style={styles.backButtonText}>←</Text>
-           </TouchableOpacity>
-           <Text style={styles.title}>¿Has olvidado tu contraseña?</Text>
-          <Text style={styles.subtitle}>Nueva contraseña</Text>
+          >
+          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+            <Text style={styles.backButtonText}>←</Text>
+          </TouchableOpacity>
+            <Text style={styles.title}>¿Has olvidado tu contraseña?</Text>
+            <Text style={styles.subtitle}>Nueva contraseña</Text>
         </LinearGradient>
-        <View style={styles.form}>
-          <Text style={styles.label}>INGRESA TU CORREO ELECTRÓNICO</Text>
-          <TextInput
+          <View style={styles.form}>
+           <Text style={styles.label}>INGRESA TU CORREO ELECTRÓNICO</Text>
+           <TextInput
             style={styles.input}
             placeholder="Ingresa tu correo electrónico"
             placeholderTextColor="#BDBDBD"

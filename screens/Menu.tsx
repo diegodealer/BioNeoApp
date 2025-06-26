@@ -1,168 +1,111 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, ActivityIndicator, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
-import * as DocumentPicker from 'expo-document-picker';
-import * as FileSystem from 'expo-file-system';
-import { ref as dbRef, get, update } from 'firebase/database';
-import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { db, storage } from '../services/firebaseconfig';
-import { useNavigation, RouteProp} from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-
-// Define los tipos de tus rutas
-type RootStackParamList = {
-  Menu: undefined;
-  PlantaDetalle: { planta: Planta };
-};
-
-
-interface Planta {
-  id: string;
-  name: string;
-  scientificName: string;
-  imageurl: string;
-  datos: {
-    humidity: string;
-    luminosity: string;
-    soilhumidity: string;
-    temperature: string;
-  };
-}
-
-async function uriToBlob(uri: string): Promise<Blob> {
-  const file = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
-  return await fetch(`data:image/jpeg;base64,${file}`).then(res => res.blob());
-}
+import type { RootStackParamList } from '../types';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { getPlantas } from '../services/Data';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Menu() {
-  const [plantas, setPlantas] = useState<Planta[]>([]);
+  const [plantas, setPlantas] = useState<any[]>([]);
+  const [imagenes, setImagenes] = useState<{ [id: string]: string }>({});
   const [loading, setLoading] = useState(true);
-  const [uploading, setUploading] = useState(false);
-  // Usa el navigation tipado de arriba, no lo redeclares aquí
-
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList, 'Menu'>>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Menu'>>();
 
   useEffect(() => {
-    fetchPlantas();
+    cargarPlantas();
+    cargarImagenes();
   }, []);
 
-  const fetchPlantas = async () => {
+  useFocusEffect(
+    React.useCallback(() => {
+      cargarPlantas();
+      cargarImagenes();
+    }, [])
+  );
+
+  const cargarPlantas = async () => {
     setLoading(true);
     try {
-      const plantasRef = dbRef(db, 'Plantas');
-      const snapshot = await get(plantasRef);
-      const data = snapshot.val();
-      if (!data) {
-        setPlantas([]);
-      } else {
-        const plantasArray = Object.keys(data).map(id => ({
-          id,
-          name: data[id].name,
-          scientificName: data[id].ScientificName,
-          imageurl: data[id].imageurl,
-          datos: data[id].datos,
-        }));
-        setPlantas(plantasArray);
-      }
-    } catch (err) {
-      Alert.alert('Error', 'No se pudieron cargar las plantas');
+      const data = await getPlantas();
+      setPlantas(data);
+    } catch (error) {
+      setPlantas([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const pickImage = async (planta: Planta) => {
+  const cargarImagenes = async () => {
     try {
-      const result = await DocumentPicker.getDocumentAsync({
-        type: 'image/*',
-        copyToCacheDirectory: true,
-        multiple: false,
-      });
-
-      if (result.assets && result.assets.length > 0 && result.assets[0].uri) {
-        handleImageUpload(result.assets[0].uri, planta.id);
-      }
-    } catch (error) {
-      Alert.alert('Error', 'No se pudo seleccionar la imagen');
+      const stored = await AsyncStorage.getItem('imagenesPlantas');
+      if (stored) setImagenes(JSON.parse(stored));
+    } catch (e) {
+      setImagenes({});
     }
   };
 
-  const handleImageUpload = async (uri: string, plantaId: string) => {
-    try {
-      setUploading(true);
-      const blob = await uriToBlob(uri);
-
-      const filename = `plantas/${plantaId}_${Date.now()}.jpg`;
-      const imgRef = storageRef(storage, filename);
-      await uploadBytes(imgRef, blob);
-
-      const downloadURL = await getDownloadURL(imgRef);
-
-      // Actualiza solo el campo imageurl de la planta existente
-      const plantaDbRef = dbRef(db, `Plantas/${plantaId}`);
-      await update(plantaDbRef, { imageurl: downloadURL });
-
-      Alert.alert('Éxito', 'Imagen subida correctamente');
-      fetchPlantas();
-    } catch (error) {
-      console.log('Error al subir imagen:', error);
-      Alert.alert('Error', 'No se pudo subir la imagen');
-    } finally {
-      setUploading(false);
-    }
+  const handleAgregarPlanta = () => {
+    navigation.navigate({ name: 'AgregarPlanta' } as any);
   };
-
-  if (loading) {
-    return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" color="#007AFF" />
-      </View>
-    );
-  }
 
   return (
     <View style={styles.container}>
-      {uploading && (
-        <View style={styles.center}>
-          <ActivityIndicator size="small" color="#007AFF" />
-          <Text>Subiendo imagen...</Text>
-        </View>
-      )}
+      {/* Header */}
+      <View style={styles.headerBox}>
+        <Image source={require('../assets/images/splash-icon.png')} style={styles.avatar} />
+        <Text style={styles.headerText}>HOLA, DIEGO</Text>
+        <Image source={require('../assets/images/icon.png')} style={styles.leaf} />
+      </View>
       <Text style={styles.header}>PLANTAS</Text>
-      <FlatList
-        data={plantas}
-        keyExtractor={item => item.id}
-        contentContainerStyle={{ paddingBottom: 80 }}
-        renderItem={({ item }) => (
-          <View style={styles.card}>
-            <TouchableOpacity onPress={() => pickImage(item)}>
-              {item.imageurl ? (
-                <Image source={{ uri: item.imageurl }} style={styles.image} />
-              ) : (
-                <View style={styles.placeholder}>
-                  <Text>Sin imagen</Text>
+      {loading ? (
+        <Text>Cargando...</Text>
+      ) : (
+        <FlatList
+          data={plantas}
+          keyExtractor={item => item.id}
+          contentContainerStyle={{ paddingBottom: 80 }}
+          renderItem={({ item }) => (
+            <View style={styles.card}>
+              <Image
+                source={imagenes[item.id] ? { uri: imagenes[item.id] } : require('../assets/images/favicon.png')}
+                style={styles.image}
+              />
+              <View style={styles.cardContent}>
+                <Text style={styles.cardTitle}>{item.name?.toUpperCase()}</Text>
+                <Text style={styles.cardSubtitle}>(NOMBRE {item.scientificName?.toUpperCase() || 'IDK'})</Text>
+                <View style={styles.infoRow}>
+                  <Text style={styles.cardInfo}>HUMEDAD: {item.datos?.humidity || '--'}</Text>
+                  <Text style={styles.cardInfo}>TEMPERATURA: {item.datos?.temperature || '--'}</Text>
                 </View>
-              )}
-            </TouchableOpacity>
-            <View style={styles.cardContent}>
-              <Text style={styles.cardTitle}>{item.name?.toUpperCase()}</Text>
-              <Text style={styles.cardSubtitle}>(NOMBRE {item.scientificName?.toUpperCase() || 'NO DEFINIDO'})</Text>
-              <Text style={styles.cardInfo}>
-                HUMEDAD: {item.datos?.humidity || '--'}   TEMPERATURA: {item.datos?.temperature || '--'}
-              </Text>
-              <Text style={styles.cardInfo}>
-                LUMINOSIDAD: {item.datos?.luminosity || '--'}
-              </Text>
-              <TouchableOpacity style={styles.verMasBtn} onPress={() => navigation.navigate('PlantaDetalle', { planta: item })}>
-                <Text style={styles.verMasText}>🔍 Ver más</Text>
-              </TouchableOpacity>
+                <View style={styles.infoRow}>
+                  <Text style={styles.cardInfo}>LUMINOSIDAD: {item.datos?.luminosity || '--'}</Text>
+                </View>
+                <TouchableOpacity
+                  style={styles.verMasBtn}
+                  onPress={() =>
+                    navigation.navigate('PlantaDetalle', {
+                      planta: item,
+                      //imageUri: imagenes[item.id],
+                    })
+                  }
+                >
+                  <Text style={styles.verMasText}>🔍 Ver más</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        )}
-      />
-      <TouchableOpacity style={styles.fab}>
+          )}
+        />
+      )}
+      {/* Botón flotante para agregar planta */}
+      <TouchableOpacity style={styles.fab} onPress={handleAgregarPlanta}>
         <Text style={styles.fabText}>+</Text>
       </TouchableOpacity>
+      {/* Barra de navegación inferior */}
       <View style={styles.bottomBar}>
+        <TouchableOpacity style={styles.bottomBtn}>
+          <Text style={styles.bottomIcon}>⚙️</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.bottomBtn}>
           <Text style={styles.bottomIcon}>💬</Text>
         </TouchableOpacity>
@@ -176,7 +119,19 @@ export default function Menu() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff', paddingTop: 20 },
-  center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  headerBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#2ee59d',
+    marginHorizontal: 10,
+    borderRadius: 12,
+    marginBottom: 10,
+    padding: 8,
+    marginTop: 10,
+  },
+  avatar: { width: 40, height: 40, borderRadius: 20, marginRight: 10 },
+  headerText: { fontWeight: 'bold', fontSize: 18, color: '#222', flex: 1 },
+  leaf: { width: 32, height: 32 },
   header: { fontSize: 22, fontWeight: 'bold', alignSelf: 'center', marginVertical: 8, letterSpacing: 2 },
   card: {
     backgroundColor: '#6d3b2c',
@@ -190,14 +145,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: { width: 80, height: 80, borderRadius: 12, marginRight: 12, backgroundColor: '#fff' },
-  placeholder: {
-    width: 80, height: 80, borderRadius: 12, marginRight: 12,
-    backgroundColor: '#eee', justifyContent: 'center', alignItems: 'center'
-  },
   cardContent: { flex: 1 },
   cardTitle: { color: '#fff', fontWeight: 'bold', fontSize: 18, marginBottom: 2 },
   cardSubtitle: { color: '#fff', fontSize: 12, marginBottom: 4 },
-  cardInfo: { color: '#fff', fontSize: 12 },
+  infoRow: { flexDirection: 'row', justifyContent: 'space-between' },
+  cardInfo: { color: '#fff', fontSize: 12, marginRight: 10 },
   verMasBtn: { marginTop: 8, alignSelf: 'flex-start', backgroundColor: '#fff', borderRadius: 8, paddingHorizontal: 10, paddingVertical: 4 },
   verMasText: { color: '#6d3b2c', fontWeight: 'bold', fontSize: 14 },
   fab: {
@@ -211,5 +163,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row', backgroundColor: '#6d3b2c', height: 56, justifyContent: 'space-around', alignItems: 'center'
   },
   bottomBtn: { flex: 1, alignItems: 'center' },
-  bottomIcon: { fontSize: 28, color: '#fff' },
+  bottomIcon: { fontSize: 28, color: '#fff'},
 });

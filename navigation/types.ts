@@ -8,5 +8,6 @@ export type Planta = {
 
 export type RootStackParamList = {
   Menu: undefined;
-  PlantaDetalle: { planta: Planta };
+  AgregarPlanta: undefined;
+  PlantaDetalle: { planta: Planta, imageUri: string};
 };

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView} from 'react-native';
 import Colors from '../constants/colors';
 import styles from '../constants/styles';
 import { useNavigation } from '@react-navigation/native';
@@ -7,7 +7,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 const RecoverPassword = () => {
     const [password, setPassword] = useState('');
-    const navigation = useNavigation();
+    const navigation = useNavigation<any>();
     const [confirm, setConfirm] = useState('');
 
     return (
@@ -19,7 +19,7 @@ const RecoverPassword = () => {
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
         >
-            <View style={Recoverstyles.lockIcon}>
+          <View style={Recoverstyles.lockIcon}>
             {/* Ejemplo usando emoji*/}
             <Text style={{ fontSize: 60, textAlign: 'center' }}>🔒</Text>
           </View>
@@ -28,26 +28,28 @@ const RecoverPassword = () => {
           </Text>
         </LinearGradient>
         <View style={styles.form}>
-          <Text style={styles.label}>NUEVA CONTRASEÑA</Text>
+          <Text style={[styles.label, Recoverstyles.bigLabel]}>NUEVA CONTRASEÑA</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, Recoverstyles.bigInput]}
             placeholder="******"
             placeholderTextColor={Colors.placeholder}
             secureTextEntry
             value={password}
             onChangeText={setPassword}
           />
-          <Text style={styles.label}>CONFIRMAR CONTRASEÑA</Text>
+          <Text style={[styles.label, Recoverstyles.bigLabel]}>CONFIRMAR CONTRASEÑA</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, Recoverstyles.bigInput]}
             placeholder="******"
             placeholderTextColor={Colors.placeholder}
             secureTextEntry
             value={confirm}
             onChangeText={setConfirm}
           />
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Confirmar cambios</Text>
+          <TouchableOpacity style={styles.button}
+          onPress={() => navigation.navigate("CreateAC")}
+          >
+            <Text style={Recoverstyles.buttonText}>Confirmar cambios</Text> //styles
           </TouchableOpacity>
         </View>
       </View>
@@ -65,7 +67,7 @@ const Recoverstyles = StyleSheet.create({
     },
     headerText: {
         color: '#fff',
-        fontSize: 16,
+        fontSize: 32,
         fontWeight: 'bold',
         marginBottom: 5,
         marginHorizontal: 20,
@@ -80,9 +82,15 @@ const Recoverstyles = StyleSheet.create({
     },
     buttonText: {
         color: '#fff',
-        fontSize: 16,
+        fontSize: 22,
         fontWeight: 'bold',
-    }
+    },
+    bigLabel:{
+        fontSize: 18,
+    },
+    bigInput:{
+        fontSize: 18,
+    },  
 });
 
 export default RecoverPassword;

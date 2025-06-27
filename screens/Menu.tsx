@@ -2,19 +2,17 @@ import React, { useEffect, useState } from 'react';
 import type { RootStackParamList } from '../types';
 import cardstiles from '../constants/CardsStyles';
 import styles from '../constants/styles';
-import Colors from '../constants/colors';
 import { View, Text, FlatList,TouchableOpacity, Image } from 'react-native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { getPlantas } from '../services/Data';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Menu() {
   const [plantas, setPlantas] = useState<any[]>([]);
   const [imagenes, setImagenes] = useState<{ [id: string]: string }>({});
   const [loading, setLoading] = useState(true);
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Menu'>>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   useEffect(() => {
     cargarPlantas();
@@ -55,18 +53,15 @@ export default function Menu() {
 
   return (
     <View style={styles.container}>
+      {/* Header */}
       <View style={cardstiles.headerBox}>
-        <LinearGradient
-            colors={[Colors.mint_green, Colors.green_emerald]}
-            style={styles.header}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-        ></LinearGradient>
         <Image source={require('../assets/images/splash-icon.png')} style={cardstiles.avatar} />
         <Text style={cardstiles.headerText}>HOLA, DIEGO</Text>
         <Image source={require('../assets/images/icon.png')} style={cardstiles.leaf} />
       </View>
+      {/* Título */}
       <Text style={cardstiles.header}>PLANTAS</Text>
+      {/* Lista de plantas */}
       {loading ? (
         <Text>Cargando...</Text>
       ) : (
@@ -85,6 +80,8 @@ export default function Menu() {
                 <Text style={cardstiles.cardSubtitle}>(NOMBRE {item.scientificName?.toUpperCase() || 'IDK'})</Text>
                 <View style={cardstiles.infoRow}>
                   <Text style={cardstiles.cardInfo}>HUMEDAD: {item.datos?.humidity || '--'}</Text>
+                </View>
+                <View style={cardstiles.infoRow}>
                   <Text style={cardstiles.cardInfo}>TEMPERATURA: {item.datos?.temperature || '--'}</Text>
                 </View>
                 <View style={cardstiles.infoRow}>

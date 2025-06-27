@@ -6,12 +6,10 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 export default function PlantaDetalle() {
   const navigation = useNavigation();
   const route = useRoute();
-  // Recibe la planta desde navigation params
   const { planta } = route.params as any;
 
-  // Datos para el gráfico (puedes adaptar según tus datos reales)
   const data = {
-    labels: ['Luminosidad', 'Humedad', 'Temperatura', 'Humedad del suelo'],
+    labels: ['Luminosidad', 'Humedad', 'Temperatura', 'Humedad suelo'],
     datasets: [
       {
         data: [
@@ -49,8 +47,11 @@ export default function PlantaDetalle() {
             labelColor: () => '#fff',
             style: { borderRadius: 16 },
             propsForBackgroundLines: { stroke: '#fff' },
+            propsForLabels: { fontSize: 10, fontWeight: 'bold' },
           }}
-          style={{ marginVertical: 8, borderRadius: 16 }} yAxisSuffix={''}        />
+          style={{ marginVertical: 8, borderRadius: 16 }}
+          yAxisSuffix={''}
+        />
         <TouchableOpacity style={styles.regarBtn} onPress={handleRegar}>
           <Text style={styles.regarText}>Regar planta</Text>
         </TouchableOpacity>
@@ -63,33 +64,67 @@ export default function PlantaDetalle() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff', paddingTop: 20 },
-  card: {
-    backgroundColor: '#6d3b2c',
-    borderRadius: 16,
-    margin: 16,
-    padding: 12,
-    borderWidth: 3,
-    borderColor: '#fff',
-    alignItems: 'center',
+  container: { 
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#fff', 
+    flex: 1, 
+    paddingTop: 40,
+    paddingBottom: 20,
   },
-  title: { color: '#fff', fontWeight: 'bold', fontSize: 22, marginBottom: 2 },
-  subtitle: { color: '#fff', fontSize: 12, marginBottom: 8 },
-  image: { width: 120, height: 120, borderRadius: 60, backgroundColor: '#fff', marginBottom: 8 },
+  card: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#6d3b2c',
+    borderColor: '#fff',
+    borderRadius: 25,
+    borderWidth: 3,
+    margin: 0,
+    width: '100%',
+    flex: 1,
+    padding: 12,
+  },
+  image: { 
+    backgroundColor: '#fff',
+    borderRadius: 60, 
+    height: 120, 
+    marginBottom: 8, 
+    width: 120 
+  },
   regarBtn: {
     backgroundColor: '#2e7d5b',
     borderRadius: 20,
+    marginTop: 16,
     paddingHorizontal: 32,
     paddingVertical: 12,
-    marginTop: 16,
   },
-  regarText: { color: '#fff', fontWeight: 'bold', fontSize: 18, textAlign: 'center' },
+  regarText: { 
+    color: '#fff', 
+    fontSize: 18, 
+    fontWeight: 'bold', 
+    textAlign: 'center' 
+  },
+  subtitle: { 
+    color: '#fff', 
+    fontSize: 12, 
+    marginBottom: 8 
+  },
+  title: { 
+    color: '#fff', 
+    fontSize: 22, 
+    fontWeight: 'bold', 
+    marginBottom: 2 
+  },
   verMenosBtn: {
-    marginTop: 12,
     backgroundColor: '#fff',
     borderRadius: 8,
+    marginTop: 12,
     paddingHorizontal: 10,
     paddingVertical: 4,
   },
-  verMenosText: { color: '#6d3b2c', fontWeight: 'bold', fontSize: 14 },
+  verMenosText: { 
+    color: '#6d3b2c', 
+    fontSize: 14, 
+    fontWeight: 'bold' 
+  },
 });

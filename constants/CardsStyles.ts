@@ -2,14 +2,17 @@ import { StyleSheet } from "react-native";
 
 const cardstiles = StyleSheet.create({
   headerBox: {
+    width: '100%',
+    minHeight: 110,
+    paddingTop: 40,
+    paddingBottom: 40,
+    justifyContent: 'center',
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#2ee59d',
-    marginHorizontal: 10,
-    borderRadius: 12,
-    marginBottom: 10,
-    padding: 8,
-    marginTop: 10,
+    borderRadius: 10,
+    padding: 10,
+    marginTop: 0,
   },
   avatar: { 
     width: 40, 

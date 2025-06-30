@@ -1,41 +1,21 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import Password from './screens/Password';
-import CreateAC from './screens/CreateAC'; 
-import Login from './screens/LogIn';
-import ProfileEdit from './screens/profile';
-import RecoverPassword from './screens/RecoverPassword';
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import WelcomeScreen from './screens/WelcomeScreen';
-import ChatBoot from './screens/ChatBoot';
+import { NavigationContainer } from '@react-navigation/native';
+import AgregarPlanta from './screens/AgregarPlanta';
+import Menu from './screens/Menu';
+import PlantaDetalle from './screens/PlantaDetalle';
+import { RootStackParamList } from './types';
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Welcome" screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Welcome" component={WelcomeScreen} />
-        <Stack.Screen name="RecoverPassword" component={RecoverPassword} />
-        <Stack.Screen name="profile" component={ProfileEdit} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Password" component={Password} />
-        <Stack.Screen name="CreateAC" component={CreateAC} />
-        <Stack.Screen name="ChatBoot" component={ChatBoot} />
-        {/* Otras pantallas aquí */}
+      <Stack.Navigator initialRouteName="Menu">
+        <Stack.Screen name="Menu" component={Menu}  options={{headerShown: false}}/>
+        <Stack.Screen name="PlantaDetalle" component={PlantaDetalle} options={{headerShown: false}}/>
+        <Stack.Screen name="AgregarPlanta" component={AgregarPlanta} options={{headerShown: false}}/> 
       </Stack.Navigator>
-    </NavigationContainer>  
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
-
 

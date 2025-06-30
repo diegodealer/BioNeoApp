@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { createUserWithEmailAndPassword} from 'firebase/auth';
+import {auth, db} from '../services/firebaseconfig';
+import {doc, setDoc} from 'firebase/firestore';
 import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, StyleSheet, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -11,6 +14,36 @@ const CreateAC = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const navigation = useNavigation<any>();
+
+    const handleRegister = async () => {
+        if (!username || !email || !password || !confirmPassword) {
+            alert('Completa todos los campos');
+            return;
+        }
+        if (password !== confirmPassword) {
+            alert('Las contraseñas no coinciden');
+            return;
+        }
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            await setDoc(doc(db, 'users', user.uid), {
+                username: username,
+                email: email,
+                password: password,
+                confirmPassword: confirmPassword,
+            });
+            alert('Usuario creado correctamente');
+            navigation.navigate('Login');
+        } catch (error) {
+            console.error(error);
+            if (error instanceof Error) {
+                alert("Error al registrarse: " + error.message);
+            } else {
+                alert("Error al registrarse: Ocurrió un error desconocido.");
+            }
+        }
+    }
 
     return (
 <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
@@ -79,7 +112,7 @@ const CreateAC = () => {
                 onChangeText={setConfirmPassword}
                 keyboardType="default"
             />
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Menu")}>
+            <TouchableOpacity onPress={handleRegister} style={styles.button}>
                 <Text style={[styles.buttonText, customStyles.bigButtonText]}>Registrarse</Text>
             </TouchableOpacity>
         </View>

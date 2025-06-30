@@ -1,7 +1,9 @@
 // firebaseConfig.ts
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
+import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
+import { getAuth } from 'firebase/auth';
 
 // Tu configuración
 const firebaseConfig = {
@@ -17,9 +19,8 @@ const firebaseConfig = {
 // Inicializa Firebase
 const app = initializeApp(firebaseConfig);
 
-// Inicializa Realtime Database y la exporta
-export const db = getDatabase(app);
+// Instancias de servicios
+export const db = getFirestore(app);
+export const rtdb = getDatabase(app);
 export const storage = getStorage(app);
-
-// Exporta la instancia de Firebase App
-export default firebaseConfig;
+export const auth = getAuth(app);

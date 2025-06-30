@@ -4,12 +4,36 @@ import styles from '../constants/styles';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {LinearGradient} from 'expo-linear-gradient';
+import {signInWithEmailAndPassword } from 'firebase/auth';
+import {auth, db} from '../services/firebaseconfig';
+import {doc, getDoc} from 'firebase/firestore';
 
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigation = useNavigation<any>();
+
+    const handleLogin = async () => {
+        if (!email || !password){
+            alert('Por favor, ingresa tu correo y contraseña');
+            return;
+        }
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            alert('¡Bienvenido!');
+            navigation.navigate('Menu');
+        } catch (error){
+            if (error instanceof Error) {
+                alert("Error al iniciar sesión: " + error.message);
+            } else {
+                alert("Error al iniciar sesión: Ocurrió un error desconocido.");
+            }
+        }
+    }
+
+
     return (
       <KeyboardAvoidingView style={{flex: 1}} behavior='padding'>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -47,7 +71,7 @@ const Login = () => {
               />
               <TouchableOpacity
                     style={styles.button}
-                    onPress={() => navigation.navigate("Menu")}
+                    onPress={handleLogin}
                 >
                     <Text style={[styles.buttonText, customStyles.bigButtonText]}>Ingresar</Text>
                 </TouchableOpacity>

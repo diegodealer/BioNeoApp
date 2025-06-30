@@ -79,7 +79,7 @@ const CreateAC = () => {
                 onChangeText={setConfirmPassword}
                 keyboardType="default"
             />
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Welcome")}>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Menu")}>
                 <Text style={[styles.buttonText, customStyles.bigButtonText]}>Registrarse</Text>
             </TouchableOpacity>
         </View>

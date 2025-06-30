@@ -20,7 +20,7 @@ const Login = () => {
                     start={{x: 0, y: 0}}
                     end={{x: 1, y: 1}}
                 >
-            <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate("Welcome")}>
+            <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate("WelcomeScreen")}>
                     <Text style={styles.backButtonText}>←</Text>
                 </TouchableOpacity>
                 <Text style={[styles.title, customStyles.bigTitle]}>Ingresar</Text>
@@ -47,7 +47,7 @@ const Login = () => {
               />
               <TouchableOpacity
                     style={styles.button}
-                    onPress={() => navigation.navigate("Welcome")}
+                    onPress={() => navigation.navigate("Menu")}
                 >
                     <Text style={[styles.buttonText, customStyles.bigButtonText]}>Ingresar</Text>
                 </TouchableOpacity>

@@ -6,9 +6,10 @@ import {useNavigation} from '@react-navigation/native';
 import {LinearGradient} from 'expo-linear-gradient';
 
 
+
 const Password = () => {
   const [email, setEmail] = useState('');
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   return (
     <KeyboardAvoidingView style={{flex: 1}} behavior='padding'>
       <ScrollView>
@@ -19,7 +20,7 @@ const Password = () => {
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
           >
-          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate("Login")}>
             <Text style={styles.backButtonText}>←</Text>
           </TouchableOpacity>
             <Text style={styles.title}>¿Has olvidado tu contraseña?</Text>
@@ -36,7 +37,9 @@ const Password = () => {
             keyboardType="email-address"
             autoCapitalize="none"
           />
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button}
+          onPress={() => navigation.navigate("RecoverPassword")}
+          >
             <Text style={styles.buttonText}>Enviar</Text>
           </TouchableOpacity>
         </View>

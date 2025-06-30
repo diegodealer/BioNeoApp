@@ -7,6 +7,13 @@ export type Planta = {
 };
 
 export type RootStackParamList = {
+  WelcomeScreen: undefined;
+  CreateAC: undefined;
+  Login: undefined;
+  Password: undefined;
+  RecoverPassword: undefined;
+  profile: undefined;
+  ChatBoot: undefined;
   Menu: undefined;
   AgregarPlanta: undefined;
   PlantaDetalle: { planta: Planta, imageUri: string};

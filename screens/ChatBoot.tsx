@@ -6,6 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 const bot = require("../assets/images/chatbot.png");
 
 const ChatBoot = () => {
+    const navigation = useNavigation<any>();
     return (
         <KeyboardAvoidingView
             style={{ flex: 1 }}
@@ -13,7 +14,9 @@ const ChatBoot = () => {
         >
             <View style={styles.container}>
                 {/* Botón de regreso */}
-                <TouchableOpacity style={styles.backButton}>
+                <TouchableOpacity style={styles.backButton}
+                onPress={() => navigation.navigate("Menu")}
+                >
                     <Ionicons name="arrow-back" size={32} color="#fff" />
                 </TouchableOpacity>
 

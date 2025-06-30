@@ -13,6 +13,7 @@ export default function Menu() {
   const [imagenes, setImagenes] = useState<{ [id: string]: string }>({});
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  
 
   useEffect(() => {
     cargarPlantas();
@@ -57,7 +58,9 @@ export default function Menu() {
       <View style={cardstiles.headerBox}>
         <Image source={require('../assets/images/splash-icon.png')} style={cardstiles.avatar} />
         <Text style={cardstiles.headerText}>HOLA, DIEGO</Text>
-        <Image source={require('../assets/images/icon.png')} style={cardstiles.leaf} />
+        <TouchableOpacity onPress={() => navigation.navigate('profile')}>
+          <Image source={require('../assets/images/icon.png')} style={cardstiles.leaf} />
+        </TouchableOpacity>
       </View>
       {/* Título */}
       <Text style={cardstiles.header}>PLANTAS</Text>
@@ -109,13 +112,12 @@ export default function Menu() {
       </TouchableOpacity>
       {/* Barra de navegación inferior */}
       <View style={cardstiles.bottomBar}>
-        <TouchableOpacity style={cardstiles.bottomBtn}>
-          <Text style={cardstiles.bottomIcon}>⚙️</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={cardstiles.bottomBtn}>
+        <TouchableOpacity style={cardstiles.bottomBtn}
+        onPress={() => navigation.navigate('ChatBoot')}>
           <Text style={cardstiles.bottomIcon}>💬</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={cardstiles.bottomBtn}>
+        <TouchableOpacity style={cardstiles.bottomBtn}
+        onPress={() => navigation.navigate('Menu')}>
           <Text style={cardstiles.bottomIcon}>🏠</Text>
         </TouchableOpacity>
       </View>

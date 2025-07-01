@@ -4,12 +4,14 @@ import Colors from '../constants/colors';
 import styles from '../constants/styles';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { auth } from '../services/firebaseconfig';
 
 const RecoverPassword = () => {
     const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
     const navigation = useNavigation<any>();
     const [confirm, setConfirm] = useState('');
-
     return (
   <KeyboardAvoidingView style={{ flex: 1 }} behavior='padding'>
     <View style={styles.container}>

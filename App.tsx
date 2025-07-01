@@ -9,7 +9,7 @@ import CreateAC from './screens/CreateAC';
 import Login from './screens/LogIn';
 import Password from './screens/Password';
 import RecoverPassword from './screens/RecoverPassword';
-import ChatBoot from './screens/ChatBoot';
+import ChatBot from './screens/ChatBot';
 import ProfileEdit from './screens/profile';
 
 
@@ -28,9 +28,8 @@ export default function App() {
         <Stack.Screen name="Password" component={Password} options={{headerShown: false}}/>
         <Stack.Screen name="RecoverPassword" component={RecoverPassword} options={{headerShown: false}}/>
         <Stack.Screen name="profile" component={ProfileEdit} options={{headerShown: false}}/>
-        <Stack.Screen name="ChatBoot" component={ChatBoot} options={{headerShown: false}}/>
+        <Stack.Screen name="ChatBot" component={ChatBot} options={{headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
-}
 

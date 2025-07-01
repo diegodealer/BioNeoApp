@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const bot = require("../assets/images/chatbot.png");
 
-const ChatBoot = () => {
+const ChatBot = () => {
     const navigation = useNavigation<any>();
     return (
         <KeyboardAvoidingView
@@ -96,4 +96,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ChatBoot;
+export default ChatBot;

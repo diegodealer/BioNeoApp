@@ -32,8 +32,7 @@ const CreateAC = () => {
             const user = userCredential.user;
             await setDoc(doc(db, 'users', user.uid), {
                 username: username,
-                email: email,
-                // No guardes la contraseña en Firestore
+                // email: email, // opcional, puedes dejarlo si lo necesitas
             });
             alert('Usuario creado correctamente');
             navigation.navigate('Login');

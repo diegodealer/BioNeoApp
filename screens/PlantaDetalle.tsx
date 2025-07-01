@@ -13,8 +13,8 @@ export default function PlantaDetalle() {
     datasets: [
       {
         data: [
-          Number(planta.datos?.luminosity?.replace('%', '') || 0),
           Number(planta.datos?.humidity?.replace('%', '') || 0),
+          Number(planta.datos?.luminosity?.replace('%', '') || 0),
           Number(planta.datos?.temperature?.replace('°C', '') || 0),
           Number(planta.datos?.soilhumidity?.replace('%', '') || 0),
         ],

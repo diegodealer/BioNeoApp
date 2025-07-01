@@ -1,11 +1,12 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native"; // <-- Agrega Image aquí
+import { View, Text, TouchableOpacity, Image, StyleSheet, Dimensions, Platform } from "react-native"; // <-- Agrega Image aquí
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import styles from "../constants/styles";
 
 // Asegúrate de que la ruta sea correcta y la imagen exista
 const leaf = require("../assets/images/pngtree-cartoon-leaf-illustration-png-image_9036566.png"); // ruta de ejemplo, cambiar luego de agregar el logo final 
+const { height, width } = Dimensions.get("window");
 
 const WelcomeScreen = () => {
     const navigation = useNavigation<any>();
@@ -22,7 +23,7 @@ const WelcomeScreen = () => {
                 <Text style={customStyles.welcomeTitle}>Bienvenido a</Text>
                 <Text style={customStyles.welcomeBrand}>BioNeo</Text>
                 <Text style={customStyles.welcomeSubtitle}>Tecnología que cultiva el futuro</Text>
-                <Image source={leaf} style={[customStyles.welcomeLeaf, { width: 300, height: 180 }]} />
+                <Image source={leaf} style={customStyles.welcomeLeaf} />
                 <View style={customStyles.welcomeButtonRow}>
                     <TouchableOpacity
                         style={[styles.button, customStyles.bigButton]}
@@ -45,7 +46,7 @@ const WelcomeScreen = () => {
 const customStyles = StyleSheet.create({
     welcomeHeader: {
         width: '100%',
-        height: 160,
+        height: height * 0.18, // Responsive header height
         borderBottomLeftRadius: 30,
         borderBottomRightRadius: 30,
         position: 'absolute',
@@ -56,32 +57,32 @@ const customStyles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'flex-start',
-        marginTop: 140,
+        marginTop: height * 0.16,
         paddingHorizontal: 20,
     },
     welcomeTitle: {
-        fontSize: 44,
+        fontSize: Platform.OS === 'ios' ? 38 : 36,
         color: '#222',
         fontWeight: '400',
         marginBottom: 0,
         marginTop: 10,
     },
     welcomeBrand: {
-        fontSize: 56,
+        fontSize: Platform.OS === 'ios' ? 48 : 46,
         fontWeight: 'bold',
         fontStyle: 'italic',
         color: '#222',
         marginBottom: 8,
     },
     welcomeSubtitle: {
-        fontSize: 24,
+        fontSize: Platform.OS === 'ios' ? 20 : 18,
         color: '#444',
         textAlign: 'center',
         marginBottom: 24,
     },
     welcomeLeaf: {
-        width: 200,
-        height: 120,
+        width: width * 0.45,
+        height: width * 0.27,
         resizeMode: 'contain',
         marginBottom: 40,
     },
@@ -91,14 +92,14 @@ const customStyles = StyleSheet.create({
         marginTop: 20,
     },
     bigButton: {
-        paddingVertical: 18,
-        paddingHorizontal: 32,
-        marginHorizontal: 12,
+        paddingVertical: Platform.OS === 'ios' ? 16 : 14,
+        paddingHorizontal: Platform.OS === 'ios' ? 28 : 24,
+        marginHorizontal: 10,
         borderRadius: 24,
-        minWidth: 160,
+        minWidth: width * 0.36,
     },
     bigButtonText: {
-        fontSize: 22,
+        fontSize: Platform.OS === 'ios' ? 20 : 18,
     },
 });
 

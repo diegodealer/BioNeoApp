@@ -4,14 +4,15 @@ import styles from '../constants/styles';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {LinearGradient} from 'expo-linear-gradient';
-import {signInWithEmailAndPassword } from 'firebase/auth';
+import {sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
 import {auth, db} from '../services/firebaseconfig';
-import {doc, getDoc} from 'firebase/firestore';
+import { MaterialIcons } from '@expo/vector-icons';
 
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = React.useState(false);
     const navigation = useNavigation<any>();
 
     const handleLogin = async () => {
@@ -32,6 +33,24 @@ const Login = () => {
             }
         }
     }
+
+    const handleForgotPassword = async () => {
+        if (!email) {
+          alert('Por favor, ingresa tu correo electrónico para restablecer la contraseña.');
+          return;
+        }
+        try {
+          await sendPasswordResetEmail(auth, email);
+          alert('Se ha enviado un correo para restablecer tu contraseña.');
+        } catch (error) {
+          if (error instanceof Error) {
+            alert("Error al enviar el correo: " + error.message);
+          } else {
+            alert("Error desconocido al enviar el correo.");
+          }
+        }
+      };
+  
 
 
     return (
@@ -60,15 +79,37 @@ const Login = () => {
                     onChangeText={setEmail}
                     keyboardType="email-address"
                 />
-              <Text style={[styles.label, customStyles.bigLabel]}>CONTRASEÑA</Text>
-                  <TextInput
-                      style={[styles.input, customStyles.bigInput]}
-                      placeholder="Ingresa tu contraseña"
-                      placeholderTextColor="#BDBDBD"
-                      value={password}
-                      onChangeText={setPassword}
-                      keyboardType="default"
-              />
+              <Text style={styles.label}>CONTRASEÑA</Text>
+<View style={{ flexDirection: 'row', alignItems: 'center' }}>
+  <TextInput
+    style={[styles.input, { flex: 1 }]}
+    placeholder="Ingresa tu contraseña"
+    placeholderTextColor="#BDBDBD"
+    secureTextEntry={!showPassword}
+    value={password}
+    onChangeText={setPassword}
+  />
+  <TouchableOpacity onPress={() => setShowPassword(!showPassword)}
+    style={{
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+        paddingHorizontal: 8,
+        position: 'absolute',
+        paddingVertical: 1,
+        right: 16,
+        alignContent: 'center',
+        top: -9,
+      }}
+    >
+  <MaterialIcons
+    name={showPassword ? "visibility-off" : "visibility"}
+    size={24}
+    color="#888"
+    style={{ marginLeft: 8 }}
+  />
+</TouchableOpacity>
+</View>
               <TouchableOpacity
                     style={styles.button}
                     onPress={handleLogin}

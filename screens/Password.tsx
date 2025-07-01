@@ -4,12 +4,32 @@ import styles from '../constants/styles';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {LinearGradient} from 'expo-linear-gradient';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { auth } from '../services/firebaseconfig';
 
 
 
 const Password = () => {
   const [email, setEmail] = useState('');
   const navigation = useNavigation<any>();
+
+  const handleForgotPassword = async () => {
+    if (!email) {
+      alert('Por favor, ingresa tu correo electrónico para restablecer la contraseña.');
+      return;
+    }
+    try {
+      await sendPasswordResetEmail(auth, email);
+      alert('Se ha enviado un correo para restablecer tu contraseña.');
+    } catch (error) {
+      if (error instanceof Error) {
+        alert("Error al enviar el correo: " + error.message);
+      } else {
+        alert("Error desconocido al enviar el correo.");
+      }
+    }
+  };
+  
   return (
     <KeyboardAvoidingView style={{flex: 1}} behavior='padding'>
       <ScrollView>
@@ -38,7 +58,7 @@ const Password = () => {
             autoCapitalize="none"
           />
           <TouchableOpacity style={styles.button}
-          onPress={() => navigation.navigate("RecoverPassword")}
+          onPress={handleForgotPassword}
           >
             <Text style={styles.buttonText}>Enviar</Text>
           </TouchableOpacity>

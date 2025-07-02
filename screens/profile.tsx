@@ -21,8 +21,8 @@ const ProfileEdit = () => {
             const userRef = doc(db, 'users', user.uid);
             const userSnap = await getDoc(userRef);
             if (userSnap.exists()) {
-              setProfileName(userSnap.data().username || '');
-              setConfirmProfileName(userSnap.data().username || '');
+              setProfileName(userSnap.data().name || '');
+              setConfirmProfileName(userSnap.data().name || '');
             }
           }
         };

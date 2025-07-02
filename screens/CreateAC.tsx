@@ -10,7 +10,7 @@ import Colors from '../constants/colors';
 import { MaterialIcons } from '@expo/vector-icons';
 
 const CreateAC = () => {
-    const [username, setUsername] = useState('');
+    const [Name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -19,7 +19,7 @@ const CreateAC = () => {
     const navigation = useNavigation<any>();
 
     const handleRegister = async () => {
-        if (!username || !email || !password || !confirmPassword) {
+        if (!Name || !email || !password || !confirmPassword) {
             alert('Completa todos los campos');
             return;
         }
@@ -31,7 +31,7 @@ const CreateAC = () => {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
             await setDoc(doc(db, 'users', user.uid), {
-                username: username,
+                name: Name,
                 // email: email, // opcional, puedes dejarlo si lo necesitas
             });
             alert('Usuario creado correctamente');
@@ -81,8 +81,8 @@ const CreateAC = () => {
                             style={[styles.input, customStyles.bigInput]}
                             placeholder="Ingresa tu nombre"
                             placeholderTextColor="#BDBDBD"
-                            value={username}
-                            onChangeText={setUsername}
+                            value={Name}
+                            onChangeText={setName}
                             keyboardType="default"
                             autoCapitalize="none"
                         />

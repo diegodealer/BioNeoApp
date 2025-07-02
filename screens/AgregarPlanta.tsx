@@ -2,17 +2,23 @@ import React, { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { View, Text, TextInput, TouchableOpacity, Image, Alert, KeyboardAvoidingView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { addPlanta } from '../services/Data';
+import { addPlantaCompleta, getSensoresByPlantaId } from '../services/Data';
 import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { LinearGradient } from 'expo-linear-gradient';
 import styles from '../constants/styles';
 import Colors from '../constants/colors';
+
+type RootStackParamList = {
+  PlantaDetalle: { plantaId: string; sensors: any };
+  // otros screens si es necesario
+};
 
 export default function AgregarPlanta() {
   const [name, setName] = useState('');
   const [scientificName, setScientificName] = useState('');
   const [imageUri, setImageUri] = useState<string | null>(null);
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -50,29 +56,43 @@ export default function AgregarPlanta() {
       Alert.alert('Completa todos los campos');
       return;
     }
-    // Crea la planta en la base de datos
-    const id = await addPlanta({
-      name,
-      scientificName,
-      datos: {
-        humidity: '--',
-        luminosity: '--',
-        soilhumidity: '--',
-        temperature: '--',
-      },
-    });
-    // Guarda la imagen localmente asociada al id de la planta
-    if (imageUri) {
-      try {
-        const stored = await AsyncStorage.getItem('imagenesPlantas');
-        const imagenes = stored ? JSON.parse(stored) : {};
-        imagenes[id] = imageUri;
-        await AsyncStorage.setItem('imagenesPlantas', JSON.stringify(imagenes));
-      } catch (e) {
-        // Manejo de error opcional
+    try {
+      console.log('Guardando planta...');
+      const id = await addPlantaCompleta(
+        { name, scientificName },
+        {
+          humidity: '--',
+          luminosity: '--',
+          soilhumidity: '--',
+          temperature: '--',
+        }
+      );
+      console.log('Planta creada con id:', id);
+      if (imageUri) {
+        try {
+          const stored = await AsyncStorage.getItem('imagenesPlantas');
+          const imagenes = stored ? JSON.parse(stored) : {};
+          imagenes[id] = imageUri;
+          await AsyncStorage.setItem('imagenesPlantas', JSON.stringify(imagenes));
+        } catch (e) {
+          console.log('Error guardando imagen local:', e);
+        }
       }
+      const sensores = await getSensoresByPlantaId(id);
+      console.log('Sensores obtenidos:', sensores);
+      if (!sensores) {
+        Alert.alert('Error', 'No se pudo obtener los sensores');
+        return;
+      }
+      Alert.alert('¡Éxito!', 'Planta guardada correctamente');
+      navigation.navigate('PlantaDetalle', {
+        plantaId: id,
+        sensors: { datos: sensores },
+      });
+    } catch (error) {
+      console.log('Error guardando planta:', error);
+      Alert.alert('Error', 'No se pudo guardar la planta');
     }
-    navigation.goBack();
   };
 
   return (

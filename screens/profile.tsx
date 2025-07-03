@@ -1,14 +1,16 @@
 import React from "react";
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, StyleSheet, Dimensions } from "react-native";
 import styles from "../constants/styles";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 
 const ProfileEdit = () => {
-    const navigation = useNavigation();
+    const navigation = useNavigation<any>();
     const [profileName, setProfileName] = React.useState("");
     const [confirmProfileName, setConfirmProfileName] = React.useState("");
     const [password, setPassword] = React.useState("");
+    const { width } = Dimensions.get("window");
+
 
     return (
         <KeyboardAvoidingView style={{ flex: 1 }} behavior= "padding">
@@ -19,8 +21,11 @@ const ProfileEdit = () => {
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 1 }}
                 >
-                <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-                    <Text style={styles.backButtonText}>←</Text>
+                <TouchableOpacity style={customStyles.absoluteBackButton} 
+                onPress={() => navigation.navigate("Menu")}
+                hitSlop={{ top: 16, bottom: 16, left: 16, right: 16 }}
+                >
+                    <Text style={customStyles.bigBackButtonText}>←</Text>
                 </TouchableOpacity>
                 <Text style={{fontSize: 90, marginBottom: 10}}>👤</Text>
                 <Text style={styles.title}>Editar Perfil</Text>
@@ -52,10 +57,13 @@ const ProfileEdit = () => {
                         value={password}
                         onChangeText={setPassword}
                     />
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity style={styles.button}
+                    onPress={() => navigation.navigate("Menu")}>
                         <Text style={styles.buttonText}>Guardar Cambios</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={customStyles.buttonRed}>
+                    <TouchableOpacity 
+                    style={customStyles.buttonRed}
+                    onPress={() => navigation.navigate("Password")}>
                         <Text style={customStyles.buttonTextRed}>Cambiar la contraseña</Text>    
                     </TouchableOpacity> 
                 </View>
@@ -65,6 +73,18 @@ const ProfileEdit = () => {
 };
 
 const customStyles = StyleSheet.create({
+     absoluteBackButton: {
+        position: 'absolute',
+        top: Platform.OS === 'ios' ? 60 : 32,
+        left: 16,
+        zIndex: 10,
+        backgroundColor: 'transparent',
+    },
+    bigBackButtonText: {
+        fontSize: 36,
+        color: '#fff',
+        fontWeight: 'bold',
+    },
     buttonRed: {
         backgroundColor: "#FF3B1F", 
         borderRadius: 20,

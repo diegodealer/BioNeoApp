@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
   },
   absoluteBackButton: {
     position: 'absolute',
-    top: Platform.OS === 'ios' ? 60 : 32,
+    top: Platform.OS === 'ios' ? 60 : 32 ,
     left: 16,
     zIndex: 10,
     backgroundColor: 'transparent',

@@ -5,7 +5,7 @@ import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {LinearGradient} from 'expo-linear-gradient';
 import {sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
-import {auth, db} from '../services/firebaseconfig';
+import {auth} from '../services/firebaseconfig';
 import { MaterialIcons } from '@expo/vector-icons';
 
 

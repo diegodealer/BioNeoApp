@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { sendMessageToGemini} from "../services/gemini";
 
 const bot = require("../assets/images/chatbot.png");
 
 const ChatBot = () => {
     const navigation = useNavigation<any>();
+    const [input, setInput] = useState('');
+    const [respuesta, setRespuesta] = useState('');
+
+    const handleEnviar = async () => {
+        const res = await sendMessageToGemini(input);
+        setRespuesta(res);
+    };
+
     return (
         <KeyboardAvoidingView
             style={{ flex: 1 }}
@@ -32,9 +41,12 @@ const ChatBot = () => {
                         style={styles.input}
                         placeholder="Enviar una pregunta"
                         placeholderTextColor="#888"
+                        value={input}
+                        onChangeText={setInput}
                     />
-                    <TouchableOpacity style={styles.sendButton}>
+                    <TouchableOpacity style={styles.sendButton} onPress={handleEnviar}>
                         <Ionicons name="send" size={28} color="#222" />
+                        <Text>{respuesta}</Text>
                     </TouchableOpacity>
                 </View>
             </View>

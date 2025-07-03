@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform, Dimensions} from 'react-native';
 import Colors from '../constants/colors';
 import styles from '../constants/styles';
 import React, {useState} from 'react';
@@ -30,6 +30,7 @@ const Password = () => {
     }
   };
   
+  const {width} = Dimensions.get('window');
   return (
     <KeyboardAvoidingView style={{flex: 1}} behavior='padding'>
       <ScrollView>
@@ -40,8 +41,12 @@ const Password = () => {
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
           >
-          <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate("Login")}>
-            <Text style={styles.backButtonText}>←</Text>
+          <TouchableOpacity 
+          style={customStyles.absoluteBackButton} 
+          onPress={() => navigation.navigate("Login")}
+          hitSlop={{ top: 16, bottom: 16, left: 16, right: 16 }}
+          >
+            <Text style={customStyles.bigBackButtonText}>←</Text>
           </TouchableOpacity>
             <Text style={styles.title}>¿Has olvidado tu contraseña?</Text>
             <Text style={styles.subtitle}>Nueva contraseña</Text>
@@ -70,7 +75,19 @@ const Password = () => {
 };
 
 const customStyles = StyleSheet.create({
-    bigTitle: {
+    absoluteBackButton: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 60 : 32,
+    left: 16,
+    zIndex: 10,
+    backgroundColor: 'transparent',
+  },
+  bigBackButtonText: {
+    fontSize: 36,
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  bigTitle: {
         fontSize: 32,
         fontWeight: 'bold',
     },

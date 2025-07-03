@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../services/firebaseconfig';
 import { doc, setDoc } from 'firebase/firestore';
-import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, StyleSheet, ScrollView, Dimensions, Platform, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import styles from '../constants/styles';
+// import styles from '../constants/styles';
 import Colors from '../constants/colors';
 import { MaterialIcons } from '@expo/vector-icons';
 
@@ -46,146 +46,222 @@ const CreateAC = () => {
         }
     };
 
-    return (
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                <View style={styles.container}>
-                    <LinearGradient
-                        colors={[Colors.mint_green, Colors.green_emerald]}
-                        style={styles.header}
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 1 }}
-                    >
-                        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-                            <Text style={styles.backButtonText}>←</Text>
-                        </TouchableOpacity>
-                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                            <Text style={[styles.title, customStyles.bigTitle]}>Crea una cuenta nueva</Text>
-                        </View>
-                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                            <Text style={[styles.subtitle, customStyles.bigSubtitle]}>¿Ya te has registrado? </Text>
-                            <TouchableOpacity onPress={() => navigation.navigate("Login")}> 
-                                <Text style={[
-                                    styles.subtitle,
-                                    customStyles.bigIngresar,
-                                    { textDecorationLine: 'underline', color: '#fff' }
-                                ]}>
-                                    Ingresar
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </LinearGradient>
-                    <View style={styles.form}>
-                        <Text style={[styles.label, customStyles.bigLabel]}>NOMBRE</Text>
-                        <TextInput
-                            style={[styles.input, customStyles.bigInput]}
-                            placeholder="Ingresa tu nombre"
-                            placeholderTextColor="#BDBDBD"
-                            value={Name}
-                            onChangeText={setName}
-                            keyboardType="default"
-                            autoCapitalize="none"
-                        />
-                        <Text style={[styles.label, customStyles.bigLabel]}>CORREO ELECTRÓNICO</Text>
-                        <TextInput
-                            style={[styles.input, customStyles.bigInput]}
-                            placeholder="Ingresa tu correo electrónico"
-                            placeholderTextColor="#BDBDBD"
-                            value={email}
-                            onChangeText={setEmail}
-                            keyboardType="email-address"
-                        />
-                        <Text style={[styles.label, customStyles.bigLabel]}>CONTRASEÑA</Text>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
-                            <TextInput
-                                style={[styles.input, customStyles.bigInput, { flex: 1, paddingRight: 40 }]}
-                                placeholder="Ingresa tu contraseña"
-                                placeholderTextColor="#BDBDBD"
-                                secureTextEntry={!showPassword}
-                                value={password}
-                                onChangeText={setPassword}
-                            />
-                            <TouchableOpacity
-                                onPress={() => setShowPassword(!showPassword)}
-                                style={{
-                                    position: 'absolute',
-                                    right: 16,
-                                    height: '100%',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    padding: 0,
-                                    top: -9,
-                                }}
-                                activeOpacity={0.7}
-                            >
-                                <MaterialIcons
-                                    name={showPassword ? "visibility-off" : "visibility"}
-                                    size={24}
-                                    color="#888"
-                                />
-                            </TouchableOpacity>
-                        </View>
-                        <Text style={[styles.label, customStyles.bigLabel]}>CONFIRMAR CONTRASEÑA</Text>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
-                            <TextInput
-                                style={[styles.input, customStyles.bigInput, { flex: 1, paddingRight: 40 }]}
-                                placeholder="Confirma tu contraseña"
-                                placeholderTextColor="#BDBDBD"
-                                secureTextEntry={!showConfirmPassword}
-                                value={confirmPassword}
-                                onChangeText={setConfirmPassword}
-                            />
-                            <TouchableOpacity
-                                onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-                                style={{
-                                    position: 'absolute',
-                                    right: 16,
-                                    height: '100%',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    padding: 0,
-                                    top: -9,
-                                }}
-                                activeOpacity={0.7}
-                            >
-                                <MaterialIcons
-                                    name={showConfirmPassword ? "visibility-off" : "visibility"}
-                                    size={24}
-                                    color="#888"
-                                />
-                            </TouchableOpacity>
-                        </View>
-                        <TouchableOpacity onPress={handleRegister} style={styles.button}>
-                            <Text style={[styles.buttonText, customStyles.bigButtonText]}>Registrarse</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </ScrollView>
-        </KeyboardAvoidingView>
-    );
+  function setUsername(text: string): void {
+    throw new Error('Function not implemented.');
+  }
+
+  return (
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
+    >
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.container}>
+          <LinearGradient
+            colors={[Colors.mint_green, Colors.green_emerald]}
+            style={[
+              styles.header,
+              {
+                height: 180, // Valor fijo como reemplazo de HEADER_HEIGHT
+                borderBottomLeftRadius: 30,
+                borderBottomRightRadius: 30,
+                paddingTop: Platform.OS === 'ios' ? 60 : 40,
+              },
+            ]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+          >
+            <TouchableOpacity
+              style={styles.absoluteBackButton}
+              onPress={() => navigation.goBack()}
+              hitSlop={{ top: 16, bottom: 16, left: 16, right: 16 }}
+            >
+              <Text style={customStyles.bigBackButtonText}>←</Text>
+            </TouchableOpacity>
+
+            <Text style={[styles.title, customStyles.bigTitle]}>
+              Crea una cuenta nueva
+            </Text>
+
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+              <Text style={[styles.subtitle, customStyles.bigSubtitle]}>
+                ¿Ya te has registrado?{' '}
+              </Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                <Text
+                  style={[
+                    styles.subtitle,
+                    customStyles.bigIngresar,
+                    { textDecorationLine: 'underline', color: '#fff' },
+                  ]}
+                >
+                  Ingresar
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </LinearGradient>
+
+          <View style={[styles.form, { marginTop: 40 }]}>
+            <Text style={[styles.label, customStyles.bigLabel]}>NOMBRE</Text>
+            <TextInput
+              style={[styles.input, customStyles.bigInput]}
+              placeholder="Ingresa tu nombre"
+              placeholderTextColor="#BDBDBD"
+              value={Name}
+              onChangeText={setName}
+              keyboardType="default"
+              autoCapitalize="none"
+            />
+
+            <Text style={[styles.label, customStyles.bigLabel]}>
+              CORREO ELECTRÓNICO
+            </Text>
+            <TextInput
+              style={[styles.input, customStyles.bigInput]}
+              placeholder="Ingresa tu correo electrónico"
+              placeholderTextColor="#BDBDBD"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+
+            <Text style={[styles.label, customStyles.bigLabel]}>
+              CONTRASEÑA
+            </Text>
+            <TextInput
+              style={[styles.input, customStyles.bigInput]}
+              placeholder="Ingresa tu contraseña"
+              placeholderTextColor="#BDBDBD"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+              autoCapitalize="none"
+            />
+
+            <Text style={[styles.label, customStyles.bigLabel]}>
+              CONFIRMAR CONTRASEÑA
+            </Text>
+            <TextInput
+              style={[styles.input, customStyles.bigInput]}
+              placeholder="Confirma tu contraseña"
+              placeholderTextColor="#BDBDBD"
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry
+              autoCapitalize="none"
+            />
+
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate('Menu')}
+            >
+              <Text style={[styles.buttonText, customStyles.bigButtonText]}>
+                Registrarse
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
+  );
 };
 
+const { width } = Dimensions.get('window');
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  header: {
+    justifyContent: 'flex-end',
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+  title: {
+    textAlign: 'center',
+    color: '#fff',
+  },
+  subtitle: {
+    color: '#fff',
+  },
+  form: {
+    paddingHorizontal: 20,
+  },
+  label: {
+    marginTop: 12,
+    color: '#A0A0A0',
+  },
+  input: {
+    backgroundColor: '#F2F2F2',
+    borderRadius: 20,
+    paddingHorizontal: 20,
+    marginBottom: 10,
+    alignSelf: 'center',
+  },
+  button: {
+    backgroundColor: '#39796b',
+    paddingVertical: 14,
+    borderRadius: 30,
+    marginTop: 20,
+    alignItems: 'center',
+    width: width * 0.9,
+    alignSelf: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+  },
+  absoluteBackButton: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 60 : 32 ,
+    left: 16,
+    zIndex: 10,
+    backgroundColor: 'transparent',
+  },
+});
+
 const customStyles = StyleSheet.create({
-    bigTitle: {
-        fontSize: 32,
-        fontWeight: 'bold',
-    },
-    bigSubtitle: {
-        fontSize: 20,
-    },
-    bigIngresar: {
-        fontSize: 22,
-        fontWeight: 'bold',
-    },
-    bigLabel: {
-        fontSize: 18,
-    },
-    bigInput: {
-        fontSize: 18,
-    },
-    bigButtonText: {
-        fontSize: 22,
-    },
+  bigTitle: {
+    fontSize: 34,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  bigSubtitle: {
+    fontSize: 22,
+    textAlign: 'center',
+    marginBottom: 18,
+  },
+  bigIngresar: {
+    fontSize: 22,
+    fontWeight: 'bold',
+  },
+  bigLabel: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 6,
+    color: '#A0A0A0',
+    letterSpacing: 1,
+  },
+  bigInput: {
+    fontSize: 20,
+    minHeight: 54,
+    width: width * 0.9,
+  },
+  bigButtonText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  bigBackButtonText: {
+    fontSize: 36,
+    color: '#fff',
+    fontWeight: 'bold',
+  },
 });
 
 export default CreateAC;

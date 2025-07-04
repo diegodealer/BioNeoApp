@@ -6,7 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import {LinearGradient} from 'expo-linear-gradient';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../services/firebaseconfig';
-
+import BackButton from '../components/BackButton';
 
 
 const Password = () => {
@@ -35,21 +35,16 @@ const Password = () => {
     <KeyboardAvoidingView style={{flex: 1}} behavior='padding'>
       <ScrollView>
       <View style ={styles.container}>  
+        {/* Botón de regreso fijo arriba a la izquierda */}
+        <BackButton onPress={() => navigation.navigate("Login")} />
         <LinearGradient
             colors={[Colors.mint_green, Colors.green_emerald]}
-            style={styles.header}
+            style={[styles.header, { paddingTop: 80 }]}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
           >
-          <TouchableOpacity 
-          style={customStyles.absoluteBackButton} 
-          onPress={() => navigation.navigate("Login")}
-          hitSlop={{ top: 16, bottom: 16, left: 16, right: 16 }}
-          >
-            <Text style={customStyles.bigBackButtonText}>←</Text>
-          </TouchableOpacity>
-            <Text style={styles.title}>¿Has olvidado tu contraseña?</Text>
-            <Text style={styles.subtitle}>Nueva contraseña</Text>
+          <Text style={styles.title}>¿Has olvidado tu contraseña?</Text>
+          <Text style={styles.subtitle}>Nueva contraseña</Text>
         </LinearGradient>
           <View style={styles.form}>
            <Text style={styles.label}>INGRESA TU CORREO ELECTRÓNICO</Text>

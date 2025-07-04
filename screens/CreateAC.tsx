@@ -8,6 +8,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 // import styles from '../constants/styles';
 import Colors from '../constants/colors';
 import { MaterialIcons } from '@expo/vector-icons';
+import BackButton from '../components/BackButton';
 
 const CreateAC = () => {
     const [Name, setName] = useState('');
@@ -60,49 +61,17 @@ const CreateAC = () => {
         contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
       >
-        <View style={styles.container}>
+        <View style={{ flex: 1, backgroundColor: '#fff' }}>
+          {/* Botón de regreso fijo arriba a la izquierda */}
+          <BackButton onPress={() => navigation.goBack()} />
           <LinearGradient
             colors={[Colors.mint_green, Colors.green_emerald]}
-            style={[
-              styles.header,
-              {
-                height: 180, // Valor fijo como reemplazo de HEADER_HEIGHT
-                borderBottomLeftRadius: 30,
-                borderBottomRightRadius: 30,
-                paddingTop: Platform.OS === 'ios' ? 60 : 40,
-              },
-            ]}
+            style={[styles.header, { paddingTop: 80, paddingBottom: 32, borderBottomLeftRadius: 40, borderBottomRightRadius: 40 }]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
           >
-            <TouchableOpacity
-              style={styles.absoluteBackButton}
-              onPress={() => navigation.goBack()}
-              hitSlop={{ top: 16, bottom: 16, left: 16, right: 16 }}
-            >
-              <Text style={customStyles.bigBackButtonText}>←</Text>
-            </TouchableOpacity>
-
-            <Text style={[styles.title, customStyles.bigTitle]}>
-              Crea una cuenta nueva
-            </Text>
-
-            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-              <Text style={[styles.subtitle, customStyles.bigSubtitle]}>
-                ¿Ya te has registrado?{' '}
-              </Text>
-              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                <Text
-                  style={[
-                    styles.subtitle,
-                    customStyles.bigIngresar,
-                    { textDecorationLine: 'underline', color: '#fff' },
-                  ]}
-                >
-                  Ingresar
-                </Text>
-              </TouchableOpacity>
-            </View>
+            <Text style={[styles.title, { fontSize: 32, fontWeight: 'bold', marginBottom: 8, textAlign: 'center' }]}>Crea una cuenta nueva</Text>
+            <Text style={[styles.subtitle, { fontSize: 18, textAlign: 'center', color: '#fff', marginBottom: 8 }]}>¿Ya te has registrado?</Text>
           </LinearGradient>
 
           <View style={[styles.form, { marginTop: 40 }]}>

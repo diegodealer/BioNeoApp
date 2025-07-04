@@ -7,6 +7,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import {sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
 import {auth} from '../services/firebaseconfig';
 import { MaterialIcons } from '@expo/vector-icons';
+import BackButton from '../components/BackButton';
 
 const { width } = Dimensions.get('window');
 
@@ -64,13 +65,7 @@ const Login = () => {
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 1 }}
                     >
-                        <TouchableOpacity
-                            style={customStyles.absoluteBackButton}
-                            onPress={() => navigation.navigate("WelcomeScreen")}
-                            hitSlop={{ top: 16, bottom: 16, left: 16, right: 16 }}
-                        >
-                            <Text style={customStyles.bigBackButtonText}>←</Text>
-                        </TouchableOpacity>
+                        <BackButton onPress={() => navigation.goBack()} />
                         <Text style={[styles.title, customStyles.bigTitle]}>Ingresar</Text>
                         <Text style={[styles.subtitle, customStyles.bigSubtitle]}>Inicia sesión para continuar</Text>
                     </LinearGradient>

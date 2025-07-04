@@ -8,6 +8,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { LinearGradient } from 'expo-linear-gradient';
 import styles from '../constants/styles';
 import Colors from '../constants/colors';
+import BackButton from '../components/BackButton';
 
 type RootStackParamList = {
   PlantaDetalle: { plantaId: string; sensors: any };
@@ -104,9 +105,7 @@ export default function AgregarPlanta() {
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
         >
-          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-            <Text style={styles.backButtonText}>←</Text>
-          </TouchableOpacity>
+          <BackButton onPress={() => navigation.goBack()} />
           <Text style={styles.title}>Agregar Planta</Text>
         </LinearGradient>
         <View style={styles.form}>

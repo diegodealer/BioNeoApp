@@ -101,8 +101,8 @@ export default function PlantaDetalle() {
       <View style={styles.card}>
         {planta ? (
           <>
-            <Text style={styles.title}>{planta.name?.toUpperCase()}</Text>
-            <Text style={styles.subtitle}>(NOMBRE {planta.scientificName?.toUpperCase() || 'NO DEFINIDO'})</Text>
+        <Text style={styles.title}>{planta.name?.toUpperCase()}</Text>
+        <Text style={styles.subtitle}>(NOMBRE {planta.scientificName?.toUpperCase() || 'NO DEFINIDO'})</Text>
             <Image
               source={localImage ? { uri: localImage } : require('../assets/images/favicon.png')}
               style={styles.image}
@@ -112,25 +112,25 @@ export default function PlantaDetalle() {
           <Text style={styles.title}>No se encontraron datos de la planta</Text>
         )}
         {ultimoSensor ? (
-          <BarChart
-            data={data}
-            width={Dimensions.get('window').width - 64}
-            height={220}
-            yAxisLabel=""
-            chartConfig={{
-              backgroundColor: '#6d3b2c',
-              backgroundGradientFrom: '#6d3b2c',
-              backgroundGradientTo: '#6d3b2c',
-              decimalPlaces: 0,
-              color: (opacity = 1) => `rgba(0, 230, 230, ${opacity})`,
-              labelColor: () => '#fff',
-              style: { borderRadius: 16 },
-              propsForBackgroundLines: { stroke: '#fff' },
-              propsForLabels: { fontSize: 10, fontWeight: 'bold' },
-            }}
-            style={{ marginVertical: 8, borderRadius: 16 }}
-            yAxisSuffix={''}
-          />
+        <BarChart
+          data={data}
+          width={Dimensions.get('window').width - 64}
+          height={220}
+          yAxisLabel=""
+          chartConfig={{
+            backgroundColor: '#6d3b2c',
+            backgroundGradientFrom: '#6d3b2c',
+            backgroundGradientTo: '#6d3b2c',
+            decimalPlaces: 0,
+            color: (opacity = 1) => `rgba(0, 230, 230, ${opacity})`,
+            labelColor: () => '#fff',
+            style: { borderRadius: 16 },
+            propsForBackgroundLines: { stroke: '#fff' },
+            propsForLabels: { fontSize: 10, fontWeight: 'bold' },
+          }}
+          style={{ marginVertical: 8, borderRadius: 16 }}
+          yAxisSuffix={''}
+        />
         ) : (
           <Text style={{ color: 'red' }}>No hay datos de sensores disponibles.</Text>
         )}

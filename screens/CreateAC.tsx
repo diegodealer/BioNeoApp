@@ -127,7 +127,7 @@ const CreateAC = () => {
 
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.navigate('Menu')}
+              onPress={handleRegister}
             >
               <Text style={[styles.buttonText, customStyles.bigButtonText]}>
                 Registrarse

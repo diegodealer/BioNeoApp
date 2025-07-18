@@ -1,30 +1,61 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { query, ref, limitToLast, onValue, DataSnapshot } from 'firebase/database';
+import { db } from '../services/firebaseconfig';
 
 export default function PlantaDetalle() {
   const navigation = useNavigation();
   const route = useRoute();
   const { planta } = route.params as any;
 
+  const [datos, setDatos] = useState({
+    luminosity: '0',
+    humidity: '0',
+    temperature: '0',
+    soilhumidity: '0',
+  });
+
+useEffect(() => {
+  const sensorQuery = query(ref(db, 'sensors'), limitToLast(1));
+
+  const unsubscribe = onValue(sensorQuery, (snapshot: DataSnapshot) => {
+    if (snapshot.exists()) {
+      const dataObj = snapshot.val();
+      const firstKey = Object.keys(dataObj)[0];
+      const latestData = dataObj[firstKey];
+
+      setDatos({
+        luminosity: String(latestData.luminosidad ?? '0'),
+        humidity: String(latestData.humedad ?? '0'),
+        temperature: String(latestData.temperatura ?? '0'),
+        soilhumidity: String(latestData.humedad_suelo ?? '0'),
+      });
+    }
+  });
+
+  return () => unsubscribe();
+}, []);
+
   const data = {
-    labels: ['Luminosidad', 'Humedad', 'Temperatura', 'Humedad suelo'],
+    labels: ['Luminosidad (lux)', 'Humedad (%)', 'Temperatura (°C)', 'Humedad suelo (%)'],
     datasets: [
       {
         data: [
-          Number(planta.datos?.luminosity?.replace('%', '') || 0),
-          Number(planta.datos?.humidity?.replace('%', '') || 0),
-          Number(planta.datos?.temperature?.replace('°C', '') || 0),
-          Number(planta.datos?.soilhumidity?.replace('%', '') || 0),
+          Number(datos.luminosity),
+          Number(datos.humidity),
+          Number(datos.temperature),
+          Number(datos.soilhumidity),
         ],
       },
     ],
   };
 
+
   const handleRegar = () => {
     Alert.alert('¡Listo!', 'La planta ha sido regada 🌱');
-    // Aquí puedes agregar lógica para actualizar la base de datos si lo deseas
+    // Aquí podrías escribir en Firebase si lo deseas
   };
 
   return (

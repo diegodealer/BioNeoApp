@@ -7,6 +7,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { getPlantas } from '../services/Data';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FontAwesome } from '@expo/vector-icons';
 
 export default function Menu() {
   const [plantas, setPlantas] = useState<any[]>([]);
@@ -56,10 +57,10 @@ export default function Menu() {
     <View style={styles.container}>
       {/* Header */}
       <View style={cardstiles.headerBox}>
-        <Image source={require('../assets/images/splash-icon.png')} style={cardstiles.avatar} />
+        <FontAwesome name="user-circle" size={32} color="#fff" style={{ marginRight: 8 }} />
         <Text style={cardstiles.headerText}>HOLA, DIEGO</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('profile')}>
-          <Image source={require('../assets/images/icon.png')} style={cardstiles.leaf} />
+        <TouchableOpacity onPress={() => navigation.navigate('profile')} style={{ marginLeft: 'auto' }}>
+          <FontAwesome name="cog" size={28} color="#fff" />
         </TouchableOpacity>
       </View>
       {/* Título */}
@@ -71,11 +72,15 @@ export default function Menu() {
         <FlatList
           data={plantas}
           keyExtractor={item => item.id}
-          contentContainerStyle={{ paddingBottom: 80 }}
+          contentContainerStyle={{ paddingBottom: 120 }}
           renderItem={({ item }) => (
             <View style={cardstiles.card}>
               <Image
-                source={imagenes[item.id] ? { uri: imagenes[item.id] } : require('../assets/images/favicon.png')}
+                source={
+                  imagenes[item.id]
+                    ? { uri: imagenes[item.id] }
+                    : require('../assets/images/pngtree-cartoon-leaf-illustration-png-image_9036566.png')
+                }
                 style={cardstiles.image}
               />
               <View style={cardstiles.cardContent}>
@@ -91,7 +96,7 @@ export default function Menu() {
                   <Text style={cardstiles.cardInfo}>LUMINOSIDAD: {item.datos?.luminosity || '--'}</Text>
                 </View>
                 <TouchableOpacity
-                  style={cardstiles.verMasBtn}
+                  style={[cardstiles.verMasBtn, { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }]}
                   onPress={() =>
                     navigation.navigate('PlantaDetalle', {
                       planta: item,
@@ -99,7 +104,8 @@ export default function Menu() {
                     })
                   }
                 >
-                  <Text style={cardstiles.verMasText}>🔍 Ver más</Text>
+                  <FontAwesome name="search" size={16} color="#6d3b2c" style={{ marginRight: 6 }} />
+                  <Text style={cardstiles.verMasText}>Ver más</Text>
                 </TouchableOpacity>
               </View>
             </View>

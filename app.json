@@ -4,11 +4,11 @@
     "slug": "BioNeoApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "assets/images/icon.png",
+    "icon": "./assets/images/pngtree-cartoon-leaf-illustration-png-image_9036566.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "assets/images/splash-icon.png",
+      "image": "./assets/images/bioneologo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -16,14 +16,16 @@
       "supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.wetmaster.BioNeoApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "fb8f5ee0-bf91-4db2-ab6e-14463990246f"
+      }
     }
   }
 }

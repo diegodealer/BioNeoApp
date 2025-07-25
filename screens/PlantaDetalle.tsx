@@ -83,6 +83,12 @@ export default function PlantaDetalle() {
           Number(ultimoSensor?.temperatura || 0),
           Number(ultimoSensor?.humedad_suelo || 0),
         ],
+        colors: [
+          (opacity = 1) => `rgba(255, 206, 86, ${opacity})`,    // Amarillo para Luminosidad
+          (opacity = 1) => `rgba(54, 162, 235, ${opacity})`,    // Azul para Humedad
+          (opacity = 1) => `rgba(255, 99, 132, ${opacity})`,    // Rojo para Temperatura
+          (opacity = 1) => `rgba(75, 192, 192, ${opacity})`,    // Verde agua para Humedad suelo
+        ],
       },
     ],
   };
@@ -122,14 +128,21 @@ export default function PlantaDetalle() {
             backgroundGradientFrom: '#6d3b2c',
             backgroundGradientTo: '#6d3b2c',
             decimalPlaces: 0,
-            color: (opacity = 1) => `rgba(0, 230, 230, ${opacity})`,
+            color: (opacity = 1) => `rgba(0, 230, 230, ${opacity})`, // color general (se sobrescribe con colors)
             labelColor: () => '#fff',
             style: { borderRadius: 16 },
             propsForBackgroundLines: { stroke: '#fff' },
-            propsForLabels: { fontSize: 10, fontWeight: 'bold' },
+            propsForLabels: { fontSize: 14, fontWeight: 'bold' }, // Más grande y legible
+            barPercentage: 0.6,
           }}
           style={{ marginVertical: 8, borderRadius: 16 }}
           yAxisSuffix={''}
+          verticalLabelRotation={0}
+          showValuesOnTopOfBars={true}
+          withCustomBarColorFromData={true}
+          flatColor={true}
+          segments={5}
+          fromZero={true}
         />
         ) : (
           <Text style={{ color: 'red' }}>No hay datos de sensores disponibles.</Text>

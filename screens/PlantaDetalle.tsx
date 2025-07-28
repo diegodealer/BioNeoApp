@@ -1,123 +1,69 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { query, ref, limitToLast, onValue, DataSnapshot } from 'firebase/database';
 import { db, rtdb } from '../services/firebaseconfig';
-import { ref, get } from 'firebase/database';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function PlantaDetalle() {
   const navigation = useNavigation();
   const route = useRoute();
-  const { plantaId } = route.params as any;
+  const { planta } = route.params as any;
 
-  const [planta, setPlanta] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [ultimoSensor, setUltimoSensor] = useState<any>(null);
-  const [loadingSensor, setLoadingSensor] = useState(true);
-  const [localImage, setLocalImage] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchPlanta = async () => {
-      try {
-        const plantaRef = doc(db, 'plantas', plantaId);
-        const plantaSnap = await getDoc(plantaRef);
-        if (plantaSnap.exists()) {
-          setPlanta(plantaSnap.data());
-        } else {
-          setPlanta(null);
-        }
-        // Obtener imagen local
-        const stored = await AsyncStorage.getItem('imagenesPlantas');
-        if (stored) {
-          const imagenes = JSON.parse(stored);
-          setLocalImage(imagenes[plantaId] || null);
-        } else {
-          setLocalImage(null);
-        }
-      } catch (error) {
-        console.error('Error obteniendo la planta:', error);
-        setPlanta(null);
-        setLocalImage(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchPlanta();
-  }, [plantaId]);
+  const [datos, setDatos] = useState({
+    luminosity: '0',
+    humidity: '0',
+    temperature: '0',
+    soilhumidity: '0',
+  });
 
   useEffect(() => {
-    const fetchUltimoSensor = async () => {
-      setLoadingSensor(true);
-      try {
-        const sensoresRef = ref(rtdb, `sensors/${plantaId}`);
-        const snapshot = await get(sensoresRef);
-        const data = snapshot.val();
-        if (data) {
-          // Si hay varios registros, buscar el de mayor timestamp
-          let registros = Object.values(data);
-          registros = registros.filter((r: any) => r.timestamp); // solo los que tienen timestamp
-          registros.sort((a: any, b: any) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-          setUltimoSensor(registros[0]);
-        } else {
-          setUltimoSensor(null);
-        }
-      } catch (error) {
-        console.error('Error obteniendo sensores:', error);
-        setUltimoSensor(null);
-      } finally {
-        setLoadingSensor(false);
-      }
-    };
-    fetchUltimoSensor();
-  }, [plantaId]);
+    // Corregido: Asegurarse de que 'db' es una instancia de Realtime Database, no Firestore
+    const sensorQuery = query(ref(rtdb, 'sensors'), limitToLast(1));
 
-  const data = {
-    labels: ['Luminosidad', 'Humedad', 'Temperatura', 'Humedad suelo'],
-    datasets: [
-      {
-        data: [
-          Number(ultimoSensor?.luminosidad || 0),
-          Number(ultimoSensor?.humedad || 0),
-          Number(ultimoSensor?.temperatura || 0),
-          Number(ultimoSensor?.humedad_suelo || 0),
-        ],
-        colors: [
-          (opacity = 1) => `rgba(255, 206, 86, ${opacity})`,    // Amarillo para Luminosidad
-          (opacity = 1) => `rgba(54, 162, 235, ${opacity})`,    // Azul para Humedad
-          (opacity = 1) => `rgba(255, 99, 132, ${opacity})`,    // Rojo para Temperatura
-          (opacity = 1) => `rgba(75, 192, 192, ${opacity})`,    // Verde agua para Humedad suelo
-        ],
-      },
-    ],
+  const unsubscribe = onValue(sensorQuery, (snapshot: DataSnapshot) => {
+    if (snapshot.exists()) {
+      const dataObj = snapshot.val();
+      const firstKey = Object.keys(dataObj)[0];
+      const latestData = dataObj[firstKey];
+
+      setDatos({
+        luminosity: String(latestData.luminosidad ?? '0'),
+        humidity: String(latestData.humedad ?? '0'),
+        temperature: String(latestData.temperatura ?? '0'),
+        soilhumidity: String(latestData.humedad_suelo ?? '0'),
+      });
+    }
+  });
+
+  return () => unsubscribe();
+}, []);
+
+const data = {  
+  labels: ['Luminosidad (lux)', 'Humedad (%)', 'Temperatura (°C)', 'Humedad suelo (%)'],
+  datasets: [
+    {
+      data: [
+        Number(datos.luminosity),
+        Number(datos.humidity),
+        Number(datos.temperature),
+        Number(datos.soilhumidity),
+      ],
+    },
+  ],
+};
+
+const handleRegar = () => {
+  Alert.alert('¡Listo!', 'La planta ha sido regada 🌱');
+   // Aquí podrías escribir en Firebase si lo deseas
   };
-
-  const handleRegar = () => {
-    Alert.alert('¡Listo!', 'La planta ha sido regada 🌱');
-    // Aquí puedes agregar lógica para actualizar la base de datos si lo deseas
-  };
-
-  if (loading || loadingSensor) {
-    return <ActivityIndicator size="large" color="#00e6e6" style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />;
-  }
 
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        {planta ? (
-          <>
         <Text style={styles.title}>{planta.name?.toUpperCase()}</Text>
         <Text style={styles.subtitle}>(NOMBRE {planta.scientificName?.toUpperCase() || 'NO DEFINIDO'})</Text>
-            <Image
-              source={localImage ? { uri: localImage } : require('../assets/images/favicon.png')}
-              style={styles.image}
-            />
-          </>
-        ) : (
-          <Text style={styles.title}>No se encontraron datos de la planta</Text>
-        )}
-        {ultimoSensor ? (
+        <Image source={{ uri: planta.imageurl }} style={styles.image} />
         <BarChart
           data={data}
           width={Dimensions.get('window').width - 64}
@@ -128,25 +74,15 @@ export default function PlantaDetalle() {
             backgroundGradientFrom: '#6d3b2c',
             backgroundGradientTo: '#6d3b2c',
             decimalPlaces: 0,
-            color: (opacity = 1) => `rgba(0, 230, 230, ${opacity})`, // color general (se sobrescribe con colors)
+            color: (opacity = 1) => `rgba(0, 230, 230, ${opacity})`,
             labelColor: () => '#fff',
             style: { borderRadius: 16 },
             propsForBackgroundLines: { stroke: '#fff' },
-            propsForLabels: { fontSize: 14, fontWeight: 'bold' }, // Más grande y legible
-            barPercentage: 0.6,
+            propsForLabels: { fontSize: 10, fontWeight: 'bold' },
           }}
           style={{ marginVertical: 8, borderRadius: 16 }}
           yAxisSuffix={''}
-          verticalLabelRotation={0}
-          showValuesOnTopOfBars={true}
-          withCustomBarColorFromData={true}
-          flatColor={true}
-          segments={5}
-          fromZero={true}
         />
-        ) : (
-          <Text style={{ color: 'red' }}>No hay datos de sensores disponibles.</Text>
-        )}
         <TouchableOpacity style={styles.regarBtn} onPress={handleRegar}>
           <Text style={styles.regarText}>Regar planta</Text>
         </TouchableOpacity>
@@ -157,7 +93,6 @@ export default function PlantaDetalle() {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: { 
     width: '100%',

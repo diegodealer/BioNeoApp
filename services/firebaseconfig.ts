@@ -4,7 +4,6 @@ import { getDatabase } from "firebase/database";
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
-import { getAI, getGenerativeModel, GoogleAIBackend } from "firebase/ai";
 
 // Tu configuración
 const firebaseConfig = {

@@ -18,7 +18,6 @@ export default function PlantaDetalle() {
   });
 
   useEffect(() => {
-    // Corregido: Asegurarse de que 'db' es una instancia de Realtime Database, no Firestore
     const sensorQuery = query(ref(rtdb, 'sensors'), limitToLast(1));
 
   const unsubscribe = onValue(sensorQuery, (snapshot: DataSnapshot) => {

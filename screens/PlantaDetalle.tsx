@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions, Alert } from 'react-native';
-import { BarChart } from 'react-native-chart-kit';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { query, ref, limitToLast, onValue, DataSnapshot } from 'firebase/database';
 import { db, rtdb } from '../services/firebaseconfig';
@@ -20,41 +19,34 @@ export default function PlantaDetalle() {
   useEffect(() => {
     const sensorQuery = query(ref(rtdb, 'sensors'), limitToLast(1));
 
-  const unsubscribe = onValue(sensorQuery, (snapshot: DataSnapshot) => {
-    if (snapshot.exists()) {
-      const dataObj = snapshot.val();
-      const firstKey = Object.keys(dataObj)[0];
-      const latestData = dataObj[firstKey];
+    const unsubscribe = onValue(sensorQuery, (snapshot: DataSnapshot) => {
+      if (snapshot.exists()) {
+        const dataObj = snapshot.val();
+        const firstKey = Object.keys(dataObj)[0];
+        const latestData = dataObj[firstKey];
 
-      setDatos({
-        luminosity: String(latestData.luminosidad ?? '0'),
-        humidity: String(latestData.humedad ?? '0'),
-        temperature: String(latestData.temperatura ?? '0'),
-        soilhumidity: String(latestData.humedad_suelo ?? '0'),
-      });
-    }
-  });
+        setDatos({
+          luminosity: String(latestData.luminosidad ?? '0'),
+          humidity: String(latestData.humedad ?? '0'),
+          temperature: String(latestData.temperatura ?? '0'),
+          soilhumidity: String(latestData.humedad_suelo ?? '0'),
+        });
+      }
+    });
 
-  return () => unsubscribe();
-}, []);
+    return () => unsubscribe();
+  }, []);
 
-const data = {  
-  labels: ['Luminosidad (lux)', 'Humedad (%)', 'Temperatura (°C)', 'Humedad suelo (%)'],
-  datasets: [
-    {
-      data: [
-        Number(datos.luminosity),
-        Number(datos.humidity),
-        Number(datos.temperature),
-        Number(datos.soilhumidity),
-      ],
-    },
-  ],
-};
+  const datosConFormato = [
+    { label: 'Luminosidad', value: datos.luminosity + ' lux', numeric: Number(datos.luminosity), color: '#00e6e6' },
+    { label: 'Humedad ambiente', value: datos.humidity + '%', numeric: Number(datos.humidity), color: '#4caf50' },
+    { label: 'Temperatura', value: datos.temperature + '°C', numeric: Number(datos.temperature), color: '#ff9800' },
+    { label: 'Humedad del suelo', value: datos.soilhumidity + '%', numeric: Number(datos.soilhumidity), color: '#3f51b5' },
+  ];
 
-const handleRegar = () => {
-  Alert.alert('¡Listo!', 'La planta ha sido regada 🌱');
-   // Aquí podrías escribir en Firebase si lo deseas
+  const handleRegar = () => {
+    Alert.alert('¡Listo!', 'La planta ha sido regada 🌱');
+    // Aquí podrías escribir en Firebase si lo deseas
   };
 
   return (
@@ -63,25 +55,16 @@ const handleRegar = () => {
         <Text style={styles.title}>{planta.name?.toUpperCase()}</Text>
         <Text style={styles.subtitle}>(NOMBRE {planta.scientificName?.toUpperCase() || 'NO DEFINIDO'})</Text>
         <Image source={{ uri: planta.imageurl }} style={styles.image} />
-        <BarChart
-          data={data}
-          width={Dimensions.get('window').width - 64}
-          height={220}
-          yAxisLabel=""
-          chartConfig={{
-            backgroundColor: '#6d3b2c',
-            backgroundGradientFrom: '#6d3b2c',
-            backgroundGradientTo: '#6d3b2c',
-            decimalPlaces: 0,
-            color: (opacity = 1) => `rgba(0, 230, 230, ${opacity})`,
-            labelColor: () => '#fff',
-            style: { borderRadius: 16 },
-            propsForBackgroundLines: { stroke: '#fff' },
-            propsForLabels: { fontSize: 10, fontWeight: 'bold' },
-          }}
-          style={{ marginVertical: 8, borderRadius: 16 }}
-          yAxisSuffix={''}
-        />
+
+        <View style={{ marginTop: 16, width: '100%' }}>
+          {datosConFormato.map((item, index) => (
+            <View key={index} style={{ marginVertical: 10, paddingHorizontal: 4 }}>
+              <Text style={styles.dataLabel}>{item.label}: <Text style={styles.dataValue}>{item.value}</Text></Text>
+              <View style={[styles.bar, { backgroundColor: item.color, width: `${Math.min(item.numeric, 100)}%` }]} />
+            </View>
+          ))}
+        </View>
+
         <TouchableOpacity style={styles.regarBtn} onPress={handleRegar}>
           <Text style={styles.regarText}>Regar planta</Text>
         </TouchableOpacity>
@@ -92,12 +75,13 @@ const handleRegar = () => {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: { 
+    flex: 1,
     width: '100%',
     height: '100%',
     backgroundColor: '#fff', 
-    flex: 1, 
     paddingTop: 40,
     paddingBottom: 20,
   },
@@ -120,6 +104,31 @@ const styles = StyleSheet.create({
     marginBottom: 8, 
     width: 120 
   },
+  title: { 
+    color: '#fff', 
+    fontSize: 22, 
+    fontWeight: 'bold', 
+    marginBottom: 2 
+  },
+  subtitle: { 
+    color: '#fff', 
+    fontSize: 12, 
+    marginBottom: 8 
+  },
+  dataLabel: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  dataValue: {
+    fontWeight: 'normal',
+    fontSize: 14,
+  },
+  bar: {
+    height: 14,
+    borderRadius: 8,
+  },
   regarBtn: {
     backgroundColor: '#2e7d5b',
     borderRadius: 20,
@@ -132,17 +141,6 @@ const styles = StyleSheet.create({
     fontSize: 18, 
     fontWeight: 'bold', 
     textAlign: 'center' 
-  },
-  subtitle: { 
-    color: '#fff', 
-    fontSize: 12, 
-    marginBottom: 8 
-  },
-  title: { 
-    color: '#fff', 
-    fontSize: 22, 
-    fontWeight: 'bold', 
-    marginBottom: 2 
   },
   verMenosBtn: {
     backgroundColor: '#fff',

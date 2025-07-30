@@ -37,3 +37,6 @@ yarn-error.*
 *.tsbuildinfo
 
 .vscode/
+
+# BioNeoApp Android build config
+/android/local.properties

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { query, ref, limitToLast, onValue, DataSnapshot } from 'firebase/database';
+import { query, ref, limitToLast, onValue, DataSnapshot, set } from 'firebase/database';
 import { db, rtdb } from '../services/firebaseconfig';
 
 export default function PlantaDetalle() {
@@ -44,10 +44,15 @@ export default function PlantaDetalle() {
     { label: 'Humedad del suelo', value: datos.soilhumidity + '%', numeric: Number(datos.soilhumidity), color: '#3f51b5' },
   ];
 
-  const handleRegar = () => {
-    Alert.alert('¡Listo!', 'La planta ha sido regada 🌱');
-    // Aquí podrías escribir en Firebase si lo deseas
-  };
+  const handleRegar = async () => {
+  try {
+    await set(ref(rtdb, '/bomba_estado/manual'), true);
+    Alert.alert('¡Listo!', 'La bomba fue activada 🌱');
+  } catch (error) {
+    Alert.alert('Error', 'No se pudo activar la bomba');
+    console.error('Error al activar bomba manual:', error);
+  }
+};
 
   return (
     <View style={styles.container}>
